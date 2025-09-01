@@ -18,10 +18,13 @@ Now that you've downloaded Podman:
 
 ![Podman Desktop](./img/Podman_Desktop.png){fig-width=50% group="desktop"}
 
-If you *don't* see this window (or see lots of errors) then you may need to have a look at the '[dealing with errors](./problems.qmd)' section.
-
-::: {.callout-important}
+If you *don't* see this window (or see lots of errors) then you may need to have a look at the '[dealing with problems](./problems.qmd)' page.
 
 Installation on a Mac should be fairly straightforward (as evidenced by the dearth of documentation), but for Windows there is [quite a bit more detail](https://github.com/containers/podman/blob/main/docs/tutorials/podman-for-windows.md).
+
+::: {.callout-important}
+### Restart Your Terminal
+
+Whatever terminal (iTerm2, Terminal, Windows Terminal) you had open should now **be closed** and a new 'session' started. This is because the previously open Terminal(s) don't know anything about Podman and won't be able to find it to run the next set of commands. All *new* terminals from now on will know about `podman`.
 
 :::

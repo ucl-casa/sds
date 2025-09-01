@@ -1,16 +1,12 @@
 
 /*-- scss:defaults --*/
 
-// @import url(https://fonts.googleapis.com/css?family=Joan:300,500,700);
-// @import url(https://fonts.googleapis.com/css?family=JetBrains+Mono:100,400,700);
-// @import url(https://fonts.googleapis.com/css?family=Barlow:100,400,700);
-
-// $font-family-monospace: "JetBrains Mono", "Courier New", monospace !default;
-// $font-family-sans-serif: "Barlow", sans-serif !default;
-// $font-family-serif: "Joan", "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif !default;
 $font-family-sans-serif: Arial,
   FreeSerif, serif !default;
-$font-family-monospace: "Cousine", monospace !default;
+$font-family-monospace: "Cousine", 
+  monospace !default;
+$presentation-heading-font: "Hanken Grotesk", Arial,
+  FreeSerif, serif !default;
 
 $mainfont: $font-family-sans-serif !default;
 $font-family-base: $font-family-sans-serif !default;
@@ -46,4 +42,15 @@ a{
     opacity: 1;
     text-decoration: none;
   }
+}
+
+a.nav-link dropdown-toggle, .navbar-brand, .nav-item, .nav-link .menu-text {
+  font-family: $presentation-heading-font;
+}
+
+.navbar-brand {
+  font-size: var(--bs-navbar-brand-font-size);
+  color: var(--bs-navbar-brand-color);
+  white-space: nowrap;
+  color: #fafafa !important;
 }
