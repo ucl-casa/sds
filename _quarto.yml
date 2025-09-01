@@ -13,7 +13,7 @@ execute:
   freeze: auto
 
 website:
-  title: "CASA Computing Environment"
+  title: "CASA Computing Platform"
   image: "img/CASA_Logo_no_text.png"
   repo-url: https://github.com/jreades/sds_env/
   repo-actions: [issue]
