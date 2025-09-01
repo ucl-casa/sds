@@ -1,0 +1,14 @@
+cloud-config.yml
+*.code-workspace
+*.ova
+notebooks
+
+/.quarto/
+/_site/
+/_freeze/
+/docs/
+/fonts/static/
+/fonts/to_remove/
+
+.DS_Store
+.ipynb_checkpoints/

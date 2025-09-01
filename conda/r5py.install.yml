@@ -1,0 +1,80 @@
+# To install/reinstall the environment:
+#   conda-env create -f conda.install.yml
+#
+# name: sds2022
+channels:
+  - conda-forge
+dependencies: 
+  - black # Supports code formatter labextension
+  #- contextily 
+  - cython
+  #- cmake<3.20
+  #- dask
+  #- dask-geopandas
+  - datashader
+  - descartes
+  #- gensim 
+  - geopandas
+  - geopy 
+  - gstools # Multiprocessing
+  - h3-py
+  - hdbscan
+  - ipykernel
+  - ipyleaflet 
+  - ipyparallel
+  - ipympl
+  - ipywidgets
+  - jupyterlab>=4.0 
+  - jupyterlab_code_formatter # Supports labextension
+  - jupyterlab-geojson
+  - jupyterlab-variableinspector
+  - jupyter-lsp-python # Provides LSP Extension + Server
+  - jupytext
+  - libgdal-arrow-parquet
+  - lxml
+  - networkx[default,extra]
+  #- nltk 
+  - openpyxl
+  - osmnx
+  - palettable 
+  - pip
+  - pip:
+    - fastai #==1.0.61 # Huanfa's QM
+    - gurobipy #==9.5.1 # Huanfa's QM
+    #- jupyterlab-quarto
+    - libpysal
+    #- matplotlib-scalebar 
+    - pulp #==2.6.0 # Huanfa's QM
+    - rfpimp
+    - skimpy
+    #- top2vec
+    #- unidecode
+  - pointpats
+  - polars
+  - polyline
+  - plotly
+  #- pymc3
+  - pyarrow
+  - pyogrio
+  - pysal
+  - pyzmq
+  #- python-duckdb
+  - r5py
+  - rasterio
+  - rasterstats
+  - rio-cogeo
+  - rioxarray
+  - scikit-learn
+  - seaborn
+  - spatialpandas
+  - spopt
+  - statsmodels
+  - tabulate  # For exporting from pandas to markdown
+  - tzlocal 
+  #- umap-learn
+  - xarray
+  - xarray-spatial
+  - xarray_leaflet
+  - xlrd
+  - xlsxwriter
+  - xvec

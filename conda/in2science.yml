@@ -1,0 +1,50 @@
+# To install/reinstall the environment in a RaspberryPi4:
+#  1. Download Miniforge: github.com/conda-forge/miniforge (probably aarch64)
+#  2. Follow install directions here: forums.raspberrypi.com/viewtopic.php?t=316338 (I'd suggest allowing base to remain the default)
+#  3. Check that the base environment is active.
+#  4. Install this YAML file: conda env update -f in2science.yml
+#  5. Optionally speciy the name using iPyKernel
+#  6. Run jupyter lab
+#  7. Optionally disable the kernelspace warning by editing /home/pi/miniforge3/etc/jupyter/jupyter_config.json by simply moving it to jupyter_config.json.bak
+#
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip
+  - clustergram
+  - contextily 
+  - geopandas
+  - geopy 
+  - ipykernel
+  - ipywidgets 
+  - ipyleaflet 
+  - ipympl 
+  - ipyparallel 
+  - ipywidgets 
+  - jupyter_bokeh
+  - jupyter-dash # Plotly support
+  - jupyterlab-geojson
+  - jupyterlab
+  - legendgram 
+  - nb_conda_kernels
+  - nbclient 
+  - nodejs
+  - palettable 
+  - pandas 
+  - plotly
+  - pygeos
+  - pysal
+  - qgrid 
+  - scipy
+  - seaborn
+  - scikit-learn 
+  - tabulate  # For exporting from pandas to markdown
+  - umap-learn
+  - xlsxwriter
+  - pip:
+    - geofeather 
+    - joypy
+    - jupytext
+    - kneed
+    - matplotlib-scalebar 
