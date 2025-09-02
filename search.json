@@ -668,44 +668,44 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "CASA’s Urban Spatial Science Platform",
+    "title": "CASA Computing Platform",
     "section": "",
     "text": "In order to get you started on your spatial and data science ‘journey’ you will need to follow the guidance provided on the pages we’ve linked to below. These are divided into three sections:"
   },
   {
     "objectID": "index.html#installation",
     "href": "index.html#installation",
-    "title": "CASA’s Urban Spatial Science Platform",
+    "title": "CASA Computing Platform",
     "section": "Installation",
     "text": "Installation\nYou need to start with the basic health check to ensure you’ll be able to install the software. Once you know that your machine and operating system are up-to-date, you should install the basic utilities that will enable you to complete installation of the programming environment. And then, finally, you can start installing the software!"
   },
   {
     "objectID": "index.html#post-installation",
     "href": "index.html#post-installation",
-    "title": "CASA’s Urban Spatial Science Platform",
+    "title": "CASA Computing Platform",
     "section": "Post-Installation",
     "text": "Post-Installation\nInstalling the computing environment entails thinking not just about how you run code, but also how you manage it and document it. In fact, it’s possible to run code without installing anything at all, but by signing up for, installing, or configuring these services now you know that you are ready to roll!\nWe also provide information about Code Camp which is a self-paced introduction to the fundamentals of programming in Python."
   },
   {
     "objectID": "index.html#soft-skills",
     "href": "index.html#soft-skills",
-    "title": "CASA’s Urban Spatial Science Platform",
+    "title": "CASA Computing Platform",
     "section": "Soft-Skills",
     "text": "Soft-Skills\nIt might seem strange to have a section on soft-skills as part of our ‘preparing to run the Urban Spatial Science platform web site, but MSc programmes are a ’step up’ in terms of independent study, and so knowing how to read, how to think, how to ask for help and how to study effectively is almost as important as being able to run the code. Almost. Moreover, the skills we discuss here aren’t specific to any one module so we’ve put them here as part of your orientation."
   },
   {
     "objectID": "index.html#to-dos",
     "href": "index.html#to-dos",
-    "title": "CASA’s Urban Spatial Science Platform",
+    "title": "CASA Computing Platform",
     "section": "To Dos",
     "text": "To Dos\nNone outstanding."
   },
   {
     "objectID": "index.html#citing",
     "href": "index.html#citing",
-    "title": "CASA’s Urban Spatial Science Platform",
+    "title": "CASA Computing Platform",
     "section": "Citing",
-    "text": "Citing\n@software{uss:2024,\n  author = {Reades, Jon},\n  title = {\\texttt{sds_env}: A containerised platform for Urban Spatial Science},\n  url = {https://github.com/jreades/sds_env/},\n  version = {2023},\n  date = {2023-10-01},\n}\nThis draws heavily on Dani Arribas-Bel’s work for Liverpool.\n\n\n\nDOI\n\n\n@software{hadoop,\n  author = {{Dani Arribas-Bel}},\n  title = {\\texttt{gds_env}: A containerised platform for Geographic Data Science},\n  url = {https://github.com/darribas/gds_env},\n  version = {3.0},\n  date = {2019-08-06},\n}"
+    "text": "Citing\n@software{uss:2024,\n  author = {Reades, Jon},\n  title = {\\texttt{sds_env}: A containerised platform for Urban Spatial Science},\n  url = {https://github.com/jreades/sds_env/},\n  version = {2025},\n  date = {2025-10-01},\n}\nThis draws heavily on Dani Arribas-Bel’s work for Liverpool.\n\n\n\nDOI\n\n\n@software{gds,\n  author = {{Dani Arribas-Bel}},\n  title = {\\texttt{gds_env}: A containerised platform for Geographic Data Science},\n  url = {https://github.com/darribas/gds_env},\n  version = {3.0},\n  date = {2019-08-06},\n}"
   },
   {
     "objectID": "post/git.html",
