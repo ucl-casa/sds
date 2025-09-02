@@ -31,8 +31,8 @@ None outstanding.
   author = {Reades, Jon},
   title = {\texttt{sds_env}: A containerised platform for Urban Spatial Science},
   url = {https://github.com/jreades/sds_env/},
-  version = {2023},
-  date = {2023-10-01},
+  version = {2025},
+  date = {2025-10-01},
 }
 ```
 
@@ -41,7 +41,7 @@ This draws heavily on Dani Arribas-Bel's work for Liverpool.
 [![DOI](https://zenodo.org/badge/65582539.svg)](https://zenodo.org/badge/latestdoi/65582539)
 
 ```bibtex
-@software{hadoop,
+@software{gds,
   author = {{Dani Arribas-Bel}},
   title = {\texttt{gds_env}: A containerised platform for Geographic Data Science},
   url = {https://github.com/darribas/gds_env},

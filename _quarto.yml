@@ -25,17 +25,17 @@ website:
   reader-mode: true
   page-footer: 
     left: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 2022–2025, Jon Reades"
-    center: "![](/img/favicon-16x16.png){.height:10px} CASA Computing Environment"
+    center: "![](/img/logo/full_sm.png){height=20} CASA Computing Platform"
     right: 
       - icon: github
-        href: https://github.com/jreades/sds_env
+        href: https://github.com/ucl-casa/sds
       - icon: twitter 
-        href: https://twitter.com/CASAUCL
+        href: https://web-cdn.bsky.app/profile/did:plc:mpmxzig3akrleyfhl5vfnvk4
   navbar:
     background: primary
     number-depth: 2
     search: true
-    logo: "/img/CASA_Logo_no_text.png"
+    logo: small
     collapse: true
     collapse-below: md
     left:
