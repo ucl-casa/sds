@@ -1,16 +1,14 @@
 #--- Build from Jupyter-provided Minimal Install ---#
-#  export IMG_NM=sds:2024-silicon && docker build --platform linux/arm64 -t jreades/$IMG_NM --compress  -f ./docker/Dockerfile.master .
-#  export IMG_NM=sds:2024-intel && docker build --platform linux/amd64 -t jreades/$IMG_NM --compress  -f ./docker/Dockerfile.master .
-#--- Under Podman ---#
-# podman build --arch arm64 --file ./docker/Podman.master --format docker -t jreades/sds:pod .
-# podman push jreades/sds:pod docker://docker.io/jreades/sds:pod
-# podman run --rm -d --name pod -p 8888:8888 \
+#  export IMG_NM=sds:2025-arm && podman build --arch arm64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
+#  export IMG_NM=sds:2025-amd && podman build --arch amd64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
+#  podman push <IMAGE ID> docker://docker.io/jreades/sds:2025-<ARCH>
+#
+# podman run --rm -d --name sds -p 8888:8888 \
 #   -v "$(pwd):/home/jovyan/work" \
-#   jreades/sds:pod start.sh jupyter lab \
+#   jreades/sds:2025-arm start.sh jupyter lab \
 #   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-# podman run -it --rm -v "$(pwd):/docker" quay.io/containers/buildah:latest bash
-# buildah build --file ./docker/Podman.master --format docker -t jreades/sds:podman-test .
 FROM quay.io/jupyter/minimal-notebook:notebook-7.4.1
+# Would like to aim for something slimmer but... 
 #FROM --platform=linux/amd64 continuumio/miniconda3:23.10.0-1
 LABEL maintainer="Jon Reades <j.reades@ucl.ac.uk>"
 
@@ -27,8 +25,8 @@ USER root
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         # Seem to need gcc and g++ for ARM builds now b/c of spacy
-        #gcc \ 
-        #g++ \ 
+        gcc \ 
+        g++ \ 
         #texlive \
         #pandoc \
         #pandoc-citeproc \
@@ -79,73 +77,6 @@ RUN mamba env update -n base --file $yaml_nm \
     #   -follow -type f -name '*.js' ! -name '*.min.js' -delete \
     && pip cache purge 
 
-#--- Preload the NLTK/Spacy libs and code formatter ---#
-
-# USER $NB_UID
-
-# ENV PROJ_LIB=$env_path/share/proj/
-# ENV GENSIM_DATA_DIR=/home/$NB_USER/work/gensim-data
-# ENV SPACY_DATA_DIR=/home/$NB_USER/work/spacy-data
-# ENV XDG_CACHE_HOME=/home/$NB_USER/.cache/
-
-# This bloats the Docker image but not massively
-# Should rebuild the font manager and allow us to access
-# the fonts we've just added in Matplotlib... *should*
-RUN source activate ${env_nm} \
-    && mkdir -p "/home/$NB_USER/.cache/black/$(black --version | head -n 1 | cut -d ' ' -f 2)" \
-    && black --code "print ( 'hello, world' )" \
-    && MPLBACKEND=Agg python -c "import matplotlib.pyplot" \
-    && python -c "import matplotlib.font_manager;" \
-    && python -c "import logging; logging.basicConfig(level='INFO'); import black" \
-    && conda deactivate
-
-#--- Tidy and fix permissions ---#
-USER root
-
-# Disable message
-RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements" \
-    # Clean up
-    && jupyter lab clean -y \
-    && conda clean --all -f -y \
-    && rm -rf $CONDA_DIR/share/jupyter/lab/staging \
-    && rm -rf /home/$NB_USER/.node-gyp/* \
-    && rm -rf /home/$NB_USER/.local/* \
-    && rm -rf /home/$NB_USER/.cache/rosetta \
-    && rm -rf /home/$NB_USER/.cache/yarn \ 
-    && rm -rf /home/$NB_USER/.cache/pip 
-    # Fix permissions
-    #&& fix-permissions $CONDA_DIR \
-    #&& fix-permissions /home/$NB_USER
-
-#--- Final steps
-USER $NB_UID
-
-# RUN source activate $env_nm \
-#    #&& jupyter kernelspec install $env_path --user --replace --name=$env_nm --display-name="Python (${env_nm})" \
-#    && ipython kernel install --user --name $env_nm --display-name="Python (${env_nm})" \
-#    && conda deactivate \
-#    && if [ "$env_nm" != "base" ]; then jupyter kernelspec remove -y python3; fi
-
-#RUN jupyter lab --generate-config \
-#    && echo "c.MultiKernelManager.default_kernel_name='$env_nm'" >> \
-#       /home/$NB_USER/.jupyter/jupyter_lab_config.py \
-#    # https://github.com/jupyter/notebook/issues/3674#issuecomment-397212982
-#    && echo "c.KernelSpecManager.allowed_kernelspecs = {'$env_nm'}" >> \
-#        /home/$NB_USER/.jupyter/jupyter_lab_config.py \
-#    && echo "c.KernelSpecManager.ensure_native_kernel = True" >> \
-#         /home/$NB_USER/.jupyter/jupyter_lab_config.py \
-#    && echo "conda activate $env_nm" >> /home/$NB_USER/.bashrc
-
-#--- Make Proj4 Easy to Find ---#
-# Change depending on whether using base environment
-
-# RUN echo "export PATH=$env_path/bin/:$PATH" >> ~/.bashrc 
-# RUN echo "export PROJ_LIB=$PROJ_LIB" >> ~/.bashrc
-# RUN echo "export GENSIM_DATA_DIR=$GENSIM_DATA_DIR # python -m gensim.downloader --download <dataname>" >> ~/.bashrc 
-# RUN echo "export SPACY_DATA_DIR=$SPACY_DATA_DIR # spacy.load('/path/to/en_core_web_sm')" >> ~/.bashrc 
-# RUN echo "export XDG_CACHE_HOME=$XDG_CACHE_HOME" >> ~/.bashrc
-
-
 #--- Install some fonts ---#
 #####################
 # Long term we probably want to install our own tinytex:
@@ -170,29 +101,12 @@ USER $NB_UID
 #         \usepackage[fixed]{fontawesome5}
 #
 #####################
-# Here's how to see the fonts available:
-#
-# ```{python}
-# from matplotlib import font_manager
-# from IPython.core.display import HTML
-
-# flist = font_manager.findSystemFonts()
-# names = [font_manager.FontProperties(fname=fname).get_name() for fname in flist]
-# print(names)
-
-# def make_html(fontname):
-#     return "<p>{font}: <span style='font-family:{font}; font-size: 24px;'>{font}</p>".format(font=fontname)
-
-# code = "\n".join([make_html(font) for font in sorted(set(names))])
-
-# HTML("<div style='column-count: 2;'>{}</div>".format(code))
-# ```
-#####################
 USER $NB_UID
+
 COPY ../fonts ./fontsrc
 ENV FONTCONF="/home/${NB_USER}/.config/fontconfig/conf.d"
 ENV FONTPATH="/home/${NB_USER}/fonts"
-# SHELL ["/bin/bash", "-c"]
+
 RUN tlmgr init-usertree \ 
     && mkdir -p ${FONTCONF} \ 
     && mkdir -p ${FONTPATH} \
@@ -201,17 +115,84 @@ RUN tlmgr init-usertree \
         do \
             unzip -o -d ${FONTPATH} "$i" -x __MACOSX; \
         done \
-    && fc-cache -f -v 
+    && fc-cache -f -v \
+    && rm -rf ./fontsrc
     #&& rm -f ~/.cache/matplotlib/fontlist*.json || true \
     #&& python -c "from matplotlib.font_manager import findfont; findfont('sans', rebuild_if_missing=True)"
+
+# This bloats the Docker image but not massively
+# Should rebuild the font manager and allow us to access
+# the fonts we've just added in Matplotlib... *should*
+RUN source activate ${env_nm} \
+    && mkdir -p "/home/$NB_USER/.cache/black/$(black --version | head -n 1 | cut -d ' ' -f 2)" \
+    && black --code "print ( 'hello, world' )" \
+    && MPLBACKEND=Agg python -c "import matplotlib.pyplot" \
+    && python -c "import matplotlib.font_manager;" \
+    && python -c "import logging; logging.basicConfig(level='INFO'); import black" \
+    && conda deactivate
+
+
+#--- Tidy and fix permissions ---#
+USER root
+
+# Disable message
+RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements" \
+    # Clean up
+    && jupyter lab clean -y \
+    && conda clean --all -f -y \
+    && rm -rf $CONDA_DIR/share/jupyter/lab/staging \
+    && rm -rf /home/$NB_USER/.node-gyp/* \
+    && rm -rf /home/$NB_USER/.local/* \
+    && rm -rf /home/$NB_USER/.cache/rosetta \
+    && rm -rf /home/$NB_USER/.cache/yarn \ 
+    && rm -rf /home/$NB_USER/.cache/pip 
+    # Fix permissions
+    #&& fix-permissions $CONDA_DIR \
+    #&& fix-permissions /home/$NB_USER
+
+#--- Final steps
+USER $NB_UID
+
+# USER $NB_UID
+
+#--- Preload the NLTK/Spacy libs and code formatter ---#
+# RUN source activate $env_nm \
+#    #&& jupyter kernelspec install $env_path --user --replace --name=$env_nm --display-name="Python (${env_nm})" \
+#    && ipython kernel install --user --name $env_nm --display-name="Python (${env_nm})" \
+#    && conda deactivate \
+#    && if [ "$env_nm" != "base" ]; then jupyter kernelspec remove -y python3; fi
+
+# RUN jupyter lab --generate-config \
+#    && echo "c.MultiKernelManager.default_kernel_name='$env_nm'" >> \
+#       /home/$NB_USER/.jupyter/jupyter_lab_config.py \
+#    # https://github.com/jupyter/notebook/issues/3674#issuecomment-397212982
+#    && echo "c.KernelSpecManager.allowed_kernelspecs = {'$env_nm'}" >> \
+#        /home/$NB_USER/.jupyter/jupyter_lab_config.py \
+#    && echo "c.KernelSpecManager.ensure_native_kernel = True" >> \
+#         /home/$NB_USER/.jupyter/jupyter_lab_config.py \
+#    && echo "conda activate $env_nm" >> /home/$NB_USER/.bashrc
+
+#--- Make Proj4 Easy to Find ---#
+# Change depending on whether using base environment
+
+# ENV PROJ_LIB=$env_path/share/proj/
+# ENV GENSIM_DATA_DIR=/home/$NB_USER/work/gensim-data
+# ENV SPACY_DATA_DIR=/home/$NB_USER/work/spacy-data
+# ENV XDG_CACHE_HOME=/home/$NB_USER/.cache/
+
+# RUN echo "export PATH=$env_path/bin/:$PATH" >> ~/.bashrc 
+# RUN echo "export PROJ_LIB=$PROJ_LIB" >> ~/.bashrc
+# RUN echo "export GENSIM_DATA_DIR=$GENSIM_DATA_DIR # python -m gensim.downloader --download <dataname>" >> ~/.bashrc 
+# RUN echo "export SPACY_DATA_DIR=$SPACY_DATA_DIR # spacy.load('/path/to/en_core_web_sm')" >> ~/.bashrc 
+# RUN echo "export XDG_CACHE_HOME=$XDG_CACHE_HOME" >> ~/.bashrc
 
 #--- Configure startup params ---#
 # Switch back to user to avoid accidental container runs as root
 USER $NB_UID
 
 # VSCode Extension Folder (optional usage)
-#RUN mkdir -p /home/$NB_USER/.vscode-server/extensions \
-#             /home/$NB_USER/.vscode-server-insiders/extensions \
-#    && chown -R $NB_UID \ 
-#             /home/$NB_USER/.vscode-server \
-#             /home/$NB_USER/.vscode-server-insiders
+RUN mkdir -p /home/$NB_USER/.vscode-server/extensions \
+            /home/$NB_USER/.vscode-server-insiders/extensions \
+    && chown -R $NB_UID \ 
+            /home/$NB_USER/.vscode-server \
+            /home/$NB_USER/.vscode-server-insiders

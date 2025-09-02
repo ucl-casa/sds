@@ -28,6 +28,7 @@ dependencies:
   - mapclassify
   - folium
   - geopy 
+  - great_tables # https://posit-dev.github.io/great-tables/articles/intro.html
   # - ipyleaflet # Already in jupyter-minimal
   - ipyparallel
   # - ipympl # Already in jupyter-minimal
@@ -43,30 +44,31 @@ dependencies:
   # - mgwr # -- Some problem here
   # - momepy # -- Some problem here
   - openpyxl
-#   #- osmnx
+  #- osmnx
   - palettable 
   - pip: # Adds about 500MB
     - geopandas[all]
     - datashader # -- Some problem here
+    #- osjgeo # Don't need to install directly
     - pointpats # -- Some problem here
     - pyarrow # -- Some problem here
-    # - libgdal-arrow-parquet
+    # - libgdal-arrow-parquet # -- Possible problem
     - pysal # -- Possible problem
     - duckdb # -- Possible problem
     - spatialpandas # -- Possible problem
     # - esda # (alternative to PySAL stuff)
     # - joypy
     - matplotlib-scalebar 
-  # - pointpats
-  # - libgdal-arrow-parquet # -- Possible problem
+    - matplotlib-map-utils
   - polars
   - plotly
   - pyogrio
   - qgrid # Interactive grid for pandas DataFrames
-  - rasterio
-  - rasterstats
-  - rio-cogeo
-  - rioxarray
+  # Raster stuff:
+  #- rasterio
+  #- rasterstats
+  #- rio-cogeo
+  #- rioxarray
   - scikit-learn
   - seaborn
 #   - statsmodels # Already in jupyter-minimal

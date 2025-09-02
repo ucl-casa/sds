@@ -1,0 +1,109 @@
+---
+# The value of '@reading1' should be replaced
+# with the citation key from your Bibtex file
+# (here it's Readings.bib). E.g. @reades:2022
+title: "Summary of Reading"
+author: "Jon Reades"
+date: "9/7/24"
+nocite: |
+  @reading1
+bibliography: Readings.bib
+csl: chicago-author-date.csl
+number-sections: true
+colorlinks: true
+format: 
+  html: 
+    shift-heading-level-by: 1
+    number-depth: 1
+    toc: true
+    toc-depth: 2
+    colorlinks: true
+    cap-location: top
+    highlight-style: pygments
+  pdf: # https://quarto.org/docs/reference/formats/pdf.html
+    include-in-header:
+      text: |
+        \addtokomafont{disposition}{\rmfamily}
+    papersize: a4
+    geometry:
+      - top=25mm
+      - left=60mm
+      - right=25mm
+      - bottom=25mm
+      - heightrounded
+    toc: false
+    colorlinks: true
+    cap-location: top
+    highlight-style: github
+    mainfont: "Spectral"
+    sansfont: "Roboto Flex"
+---
+
+To test this file: 
+
+```bash
+quarto render check_quarto.qmd --to pdf 
+quarto render check_quarto.qmd --to html 
+```
+
+# What kind of reading is it? 
+
+> Is it an academic paper, technical report, blogpost, etc.? And what kind of contribution is trying to make? Conceptual, theoretical, empirical or something else?
+
+# Who is the intended audience? 
+
+> Is it intended for academics, field experts, the general public? etc.? For example, if you think this is intended for someone who needs to learn new skills or someone who is in a policy-making position how do you know this?
+
+# How is the piece structured? 
+
+> Briefly, how is it organised in terms of headings, sub-headings, sections, etc.? Can you explain this structure responds to the kind of reading and type of audience?
+
+# What are the key ideas, concepts, or theories discussed? 
+
+> Briefly identify the specific areas that the contribution engages with. How do you know this?
+
+# What is the overall contribution?
+
+> What does it build on or what gap does it respond to? What are the key findings or conclusions?
+
+# What issues or gaps remain?
+
+> If relevant, are there assumptions that might not hold in other contexts? Can you think of other case studies or contexts where the reading would apply and explain why? If you think the contribution is generally valid can you explain why? Are there areas for future work identified?
+
+# Another reference
+
+Let's check that references work [e.g. @dignazio:2020ch5].
+
+And here's some Python output:
+
+```{python}
+#| echo: false
+import pandas as pd
+from great_tables import GT, md
+
+data = {
+    'id'         : [0, 1, 2, 3, 4, 5],
+    'Name'       : ['London', 'Manchester', 'Birmingham','Edinburgh','Inverness','Lerwick'],
+    'Rank'       : [1, 2, 3, 4, 5, 6],
+    'Longitude'  : [-0.128, -2.245, -1.903, -3.189, -4.223, -1.145],
+    'Latitude'   : [51.507, 53.479, 52.480, 55.953, 57.478, 60.155],
+    'Population' : [9787426, 2705000, 1141816, 901455, 70000, 6958],
+}
+
+df = pd.DataFrame(data)
+
+(
+    GT(df)
+    .tab_header(title=md('<b>City Information</b>'), subtitle=md(f"<em>Basic information about some English cities.</em>"))
+    #.fmt_currency(columns=["open", "high", "low", "close"])
+    #.fmt_date(columns="date", date_style="wd_m_day_year")
+    .fmt_number(columns=["Longitude","Latitude"], compact=True)
+    .fmt_number(columns=['Population'], compact=False)
+    .cols_hide(columns="id")
+)
+```
+
+That's it.
+
+### References
+
