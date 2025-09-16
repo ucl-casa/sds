@@ -319,7 +319,7 @@
     "href": "setup/installation.html#downloading",
     "title": "Installation",
     "section": "Downloading",
-    "text": "Downloading\nPlease download all of the Essential software for your computer. Installation is covered in the next section.\n\nApple IntelApple Silicon (M-chips)Windows PCs\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nWindows Terminal installed via either the Windows Store or the following Power Shell command winget install Microsoft.WindowsTerminal.\nPodman Desktop\nGitHub Desktop\nGit\n\nOptional:\n\nQGIS Long-Term Release (LTR)",
+    "text": "Downloading\nPlease download all of the Essential software for your computer. Installation is covered in the next section.\n\nApple IntelApple Silicon (M-chips)Windows PCs\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\nR and RStudio\nSlack\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\nR and RStudio\nSlack\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nWindows Terminal installed via either the Windows Store or the following Power Shell command winget install Microsoft.WindowsTerminal.\nPodman Desktop\nGitHub Desktop\nGit\nR and RStudio\nSlack\n\nOptional:\n\nQGIS Long-Term Release (LTR)",
     "crumbs": [
       "Step 3. Installation"
     ]
@@ -886,7 +886,7 @@
     "href": "setup/install_fest.html#downloading",
     "title": "Install ‘Fest’",
     "section": "Downloading",
-    "text": "Downloading\nPlease download all of the Essential software for your computer. Installation is covered in the next section.\n\nApple IntelApple Silicon (M-chips)Windows PCs\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nWindows Terminal installed via either the Windows Store or the following Power Shell command winget install Microsoft.WindowsTerminal.\nPodman Desktop\nGitHub Desktop\nGit\n\nOptional:\n\nQGIS Long-Term Release (LTR)",
+    "text": "Downloading\nPlease download all of the Essential software for your computer. Installation is covered in the next section.\n\nApple IntelApple Silicon (M-chips)Windows PCs\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\nR and RStudio\nSlack\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nPodman Desktop\niTerm2\nGitHub Desktop\nR and RStudio\nSlack\n\nOptional:\n\nQGIS Long-Term Release (LTR)\n\n\n\n\n\nEssential:\n\nWindows Terminal installed via either the Windows Store or the following Power Shell command winget install Microsoft.WindowsTerminal.\nPodman Desktop\nGitHub Desktop\nGit\nR and RStudio\nSlack\n\nOptional:\n\nQGIS Long-Term Release (LTR)",
     "crumbs": [
       "All-In-One"
     ]
