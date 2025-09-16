@@ -8,6 +8,8 @@ Please download all of the *Essential* software for your computer. Installation 
   - [Podman Desktop](https://podman-desktop.io/downloads)
   - [iTerm2](https://iterm2.com/downloads.html)
   - [GitHub Desktop](https://desktop.github.com/download/)
+  - [R](https://cran.r-project.org/bin/macosx/) and [RStudio](https://posit.co/download/rstudio-desktop/)
+  - [Slack](https://slack.com/intl/en-gb/downloads/mac)
 - Optional:
   - [QGIS Long-Term Release (LTR)](https://qgis.org/downloads/macos/qgis-macos-ltr.dmg) 
 
@@ -17,16 +19,20 @@ Please download all of the *Essential* software for your computer. Installation 
   - [Podman Desktop](https://podman-desktop.io/downloads)
   - [iTerm2](https://iterm2.com/downloads.html)
   - [GitHub Desktop](https://desktop.github.com/download/)
+  - [R](https://cran.r-project.org/bin/macosx/) and [RStudio](https://posit.co/download/rstudio-desktop/)
+  - [Slack](https://slack.com/intl/en-gb/downloads/mac)
 - Optional:
   - [QGIS Long-Term Release (LTR)](https://qgis.org/downloads/macos/qgis-macos-ltr.dmg) 
 
 ### Windows PCs
 
 - Essential:
-  - [Windows Terminal](https://github.com/containers/podman/blob/main/docs/tutorials/podman-for-windows.md#prerequisites) installed via either the Windows Store or the following Power Shell command `winget install Microsoft.WindowsTerminal`.
+  - [Windows Terminal](https://apps.microsoft.com/detail/9n0dx20hk701?hl=en-GB&gl=GB) installed via either the Windows Store or the following Power Shell command `winget install Microsoft.WindowsTerminal`.
   - [Podman Desktop](https://podman-desktop.io/downloads)
   - [GitHub Desktop](https://desktop.github.com/download/)
   - [Git](https://git-scm.com/download/win)
+  - [R](https://cran.r-project.org/bin/windows/base/) and [RStudio](https://posit.co/download/rstudio-desktop/)
+  - [Slack](https://slack.com/intl/en-gb/downloads/windows)
 - Optional:
   - [QGIS Long-Term Release (LTR)](https://qgis.org/downloads/QGIS-OSGeo4W-3.34.10-1.msi)
 

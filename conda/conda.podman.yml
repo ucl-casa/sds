@@ -22,6 +22,7 @@ dependencies:
   - shapely 
   - pyproj
   - packaging
+  - psycopg2
   # - cmake<3.20 # -- Thought this might fix issues, but no
   - matplotlib
   - matplotlib-base 

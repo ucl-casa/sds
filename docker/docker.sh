@@ -65,8 +65,8 @@ if [[ $1 == "start" ]]; then
 	mkdir -p "$HOME/.vscode/containers/$DOCKER_NM-insiders"
 
 	# And all systems go!
-	#echo docker run --rm -d --name $DOCKER_NM $(echo "${NETWORK_CMD}") $(echo "${PLATFORM}") -p "$JUPYTER_PORT":8888 $(echo "${DASK_CMD}") $(echo "${QUARTO_CMD}") -v "$WORK_DIR":/home/jovyan/work -v "$HOME/.vscode/containers/$DOCKER_NM-extensions:/home/jovyan/.vscode-server/extensions" -v "$HOME/.vscode/containers/$DOCKER_NM-insiders:/home/jovyan/.vscode-server-insiders" $DOCKER_IMG start.sh jupyter lab --LabApp.password=$JUPYTER_PWD --ServerApp.password=$JUPYTER_PWD --NotebookApp.token=$NOTEBOOK_TOKEN
-	CONTAINER_ID=$($(echo "${WIN_CMD}") docker run --rm -d --name $DOCKER_NM $(echo "${NETWORK_CMD}") $(echo "${PLATFORM}") -p "$JUPYTER_PORT":8888 $(echo "${DASK_CMD}") $(echo "${QUARTO_CMD}") -v "$WORK_DIR":/home/jovyan/work -v "$HOME/.vscode/containers/$DOCKER_NM-extensions:/home/jovyan/.vscode-server/extensions" -v "$HOME/.vscode/containers/$DOCKER_NM-insiders:/home/jovyan/.vscode-server-insiders" $DOCKER_IMG start.sh jupyter lab --LabApp.password=$JUPYTER_PWD --ServerApp.password=$JUPYTER_PWD --NotebookApp.token=$NOTEBOOK_TOKEN)
+	#echo podman run --rm -d --name $DOCKER_NM $(echo "${NETWORK_CMD}") $(echo "${PLATFORM}") -p "$JUPYTER_PORT":8888 $(echo "${DASK_CMD}") $(echo "${QUARTO_CMD}") -v "$WORK_DIR":/home/jovyan/work -v "$HOME/.vscode/containers/$DOCKER_NM-extensions:/home/jovyan/.vscode-server/extensions" -v "$HOME/.vscode/containers/$DOCKER_NM-insiders:/home/jovyan/.vscode-server-insiders" $DOCKER_IMG start.sh jupyter lab --LabApp.password=$JUPYTER_PWD --ServerApp.password=$JUPYTER_PWD --NotebookApp.token=$NOTEBOOK_TOKEN
+	CONTAINER_ID=$($(echo "${WIN_CMD}") podman run --rm -d --name $DOCKER_NM $(echo "${NETWORK_CMD}") $(echo "${PLATFORM}") -p "$JUPYTER_PORT":8888 $(echo "${DASK_CMD}") $(echo "${QUARTO_CMD}") -v "$WORK_DIR":/home/jovyan/work -v "$HOME/.vscode/containers/$DOCKER_NM-extensions:/home/jovyan/.vscode-server/extensions" -v "$HOME/.vscode/containers/$DOCKER_NM-insiders:/home/jovyan/.vscode-server-insiders" $DOCKER_IMG start.sh jupyter lab --LabApp.password=$JUPYTER_PWD --ServerApp.password=$JUPYTER_PWD --NotebookApp.token=$NOTEBOOK_TOKEN)
 
 	# Work out the URL to show at the end -- by default 
 	# we'll show the JupyterLab starting point, *but* if
@@ -97,10 +97,10 @@ if [[ $1 == "start" ]]; then
 	echo "Container id: $CONTAINER_ID"
 elif [[ $1 == "stop" ]]; then
 	echo "Shutting down..."
-	CONTAINER=$(docker ps -aq -f name=$DOCKER_NM)
-	docker kill --signal=SIGINT $CONTAINER
+	CONTAINER=$(podman ps -aq -f name=$DOCKER_NM)
+	podman kill --signal=SIGINT $CONTAINER
 	sleep 2
-	msg=$( docker rm -f $CONTAINER 2>&1)
+	msg=$( podman rm -f $CONTAINER 2>&1)
 	printf "Docker \e[3mshould\e[0m have now shut down the '%s' container...\n" "$DOCKER_NM"
 else
 	printf "You need to pass either \e[1;4mstart\e[0m or \e[1;4mstop\e[0m to this script.\n"
