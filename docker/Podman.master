@@ -7,7 +7,7 @@
 #   -v "$(pwd):/home/jovyan/work" \
 #   jreades/sds:2025-arm start.sh jupyter lab \
 #   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-FROM quay.io/jupyter/minimal-notebook:notebook-7.4.1
+FROM quay.io/jupyter/minimal-notebook:notebook-7.4.4
 # Would like to aim for something slimmer but... 
 #FROM --platform=linux/amd64 continuumio/miniconda3:23.10.0-1
 LABEL maintainer="Jon Reades <j.reades@ucl.ac.uk>"
@@ -27,16 +27,12 @@ RUN apt-get update \
         # Seem to need gcc and g++ for ARM builds now b/c of spacy
         gcc \ 
         g++ \ 
-        #texlive \
-        #pandoc \
-        #pandoc-citeproc \
-        #curl \
-        #musl-dev \ 
-        # Not in miniconda
-        # unzip \ 
         librsvg2-bin \
         fontconfig \
+        texlive-luatex \
+        texlive-latex-base \
         texlive-fonts-recommended \
+        ##texlive-fonts-extra \
         lmodern \
         gdebi-core
     #&& apt-cache policy musl-dev 
@@ -91,6 +87,7 @@ RUN mamba env update -n base --file $yaml_nm \
 #
 #####################
 # To get FontAwesome5 PDF support:
+# 0. Check it isn't already supplied by installation of textlive-fonts-extra!
 # 1. Unpack the fontawesome.tar.gz folder anywhere you need PDFs (e.g the practicals directory).
 #    tar -xvf ./fontsrc/fontawesome.tar.gz -C ./work/practicals/
 # 2. Adding the following to your _metadata.yml file (directory level):
@@ -103,18 +100,20 @@ RUN mamba env update -n base --file $yaml_nm \
 #####################
 USER $NB_UID
 
-COPY ../fonts ./fontsrc
 ENV FONTCONF="/home/${NB_USER}/.config/fontconfig/conf.d"
 ENV FONTPATH="/home/${NB_USER}/fonts"
 
+RUN mkdir -p ${FONTCONF} \
+    mkdir -p ${FONTPATH}
+
+COPY ../fonts/conf ${FONTCONF}
+COPY ../fonts/install ${FONTPATH}
+
 RUN tlmgr init-usertree \ 
-    && mkdir -p ${FONTCONF} \ 
-    && mkdir -p ${FONTPATH} \
-    && cp ./fontsrc/?-fonts.conf ${FONTCONF}/ \
-    && for i in `ls ./fontsrc/*.zip`; \
-        do \
-            unzip -o -d ${FONTPATH} "$i" -x __MACOSX; \
-        done \
+    #&& mkdir -p ${FONTCONF} \ 
+    #&& mkdir -p ${FONTPATH} \
+    #&& mv ./fontsrc/?-fonts.conf ${FONTCONF}/ \
+    #&& mv ./fontsrc/*.ttf ${FONTPATH}
     && fc-cache -f -v \
     && rm -rf ./fontsrc
     #&& rm -f ~/.cache/matplotlib/fontlist*.json || true \
@@ -145,10 +144,11 @@ RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements" 
     && rm -rf /home/$NB_USER/.local/* \
     && rm -rf /home/$NB_USER/.cache/rosetta \
     && rm -rf /home/$NB_USER/.cache/yarn \ 
-    && rm -rf /home/$NB_USER/.cache/pip 
+    && rm -rf /home/$NB_USER/.cache/pip \
     # Fix permissions
     #&& fix-permissions $CONDA_DIR \
     #&& fix-permissions /home/$NB_USER
+    && perl -i -p -e 's|from scipy import inf|from numpy import inf|' /opt/conda/lib/python3.12/site-packages/pysal/lib/cg/kdtree.py
 
 #--- Final steps
 USER $NB_UID

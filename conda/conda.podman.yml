@@ -9,31 +9,36 @@ channels:
   - conda-forge
 dependencies: 
   - black # Supports code formatter labextension
-  # - bokeh
+  - bokeh
   - clustergram
+  # - cmake<3.20 # -- Thought this might fix issues, but no
   - contextily
+  - cookiecutter
   - cython
   - descartes
+  - duckdb
   - flake8 # Style enforcement
+  - ipyleaflet
+  - matplotlib
+  - matplotlib-base 
+  - mapclassify
   - numpy
-  - scipy 
   - pandas 
   - pyogrio 
   - shapely 
   - pyproj
   - packaging
   - psycopg2
-  # - cmake<3.20 # -- Thought this might fix issues, but no
-  - matplotlib
-  - matplotlib-base 
-  - mapclassify
+  - scipy 
   - folium
+  - geoalchemy2
+  - geopandas[all]
   - geopy 
   - great_tables # https://posit-dev.github.io/great-tables/articles/intro.html
-  # - ipyleaflet # Already in jupyter-minimal
   - ipyparallel
   # - ipympl # Already in jupyter-minimal
   - ipywidgets
+  - ipyleaflet
   # - jupyter_bokeh # Forces significant downgrade of jupyterlab
   - jupyterlab_code_formatter # Supports labextension
   - jupyterlab-geojson
@@ -44,26 +49,26 @@ dependencies:
   - lxml
   # - mgwr # -- Some problem here
   # - momepy # -- Some problem here
+  - nltk
   - openpyxl
   #- osmnx
   - palettable 
   - pip: # Adds about 500MB
-    - geopandas[all]
-    - datashader # -- Some problem here
-    #- osjgeo # Don't need to install directly
-    - pointpats # -- Some problem here
-    - pyarrow # -- Some problem here
-    # - libgdal-arrow-parquet # -- Possible problem
-    - pysal # -- Possible problem
-    - duckdb # -- Possible problem
-    - spatialpandas # -- Possible problem
-    # - esda # (alternative to PySAL stuff)
-    # - joypy
+    #- datashader # -- Some problem here, enables visualisation of lots of data
+    #- pointpats # -- Some problem here
+    #- libgdal-arrow-parquet # -- Possible problem
+    #- spatialpandas # -- Possible problem
+    #- esda # (alternative to PySAL stuff)
+    #- joypy
     - matplotlib-scalebar 
     - matplotlib-map-utils
-  - polars
   - plotly
+  - pointpats
+  - polars
+  - psycopg2
+  - pyarrow
   - pyogrio
+  - pysal
   - qgrid # Interactive grid for pandas DataFrames
   # Raster stuff:
   #- rasterio
