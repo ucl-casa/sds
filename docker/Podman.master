@@ -148,29 +148,13 @@ RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements" 
     # Fix permissions
     #&& fix-permissions $CONDA_DIR \
     #&& fix-permissions /home/$NB_USER
+    && luaotfload-tool -v -vvv -u
     && perl -i -p -e 's|from scipy import inf|from numpy import inf|' /opt/conda/lib/python3.12/site-packages/pysal/lib/cg/kdtree.py
 
 #--- Final steps
 USER $NB_UID
 
-# USER $NB_UID
-
 #--- Preload the NLTK/Spacy libs and code formatter ---#
-# RUN source activate $env_nm \
-#    #&& jupyter kernelspec install $env_path --user --replace --name=$env_nm --display-name="Python (${env_nm})" \
-#    && ipython kernel install --user --name $env_nm --display-name="Python (${env_nm})" \
-#    && conda deactivate \
-#    && if [ "$env_nm" != "base" ]; then jupyter kernelspec remove -y python3; fi
-
-# RUN jupyter lab --generate-config \
-#    && echo "c.MultiKernelManager.default_kernel_name='$env_nm'" >> \
-#       /home/$NB_USER/.jupyter/jupyter_lab_config.py \
-#    # https://github.com/jupyter/notebook/issues/3674#issuecomment-397212982
-#    && echo "c.KernelSpecManager.allowed_kernelspecs = {'$env_nm'}" >> \
-#        /home/$NB_USER/.jupyter/jupyter_lab_config.py \
-#    && echo "c.KernelSpecManager.ensure_native_kernel = True" >> \
-#         /home/$NB_USER/.jupyter/jupyter_lab_config.py \
-#    && echo "conda activate $env_nm" >> /home/$NB_USER/.bashrc
 
 #--- Make Proj4 Easy to Find ---#
 # Change depending on whether using base environment

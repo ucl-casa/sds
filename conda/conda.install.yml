@@ -15,6 +15,7 @@ dependencies:
   - catboost
   - clustergram
   - contextily 
+  - cookiecutter
   - cubo # Data Cubes from GEE and STAC
   - cython
   #- cmake<3.20
