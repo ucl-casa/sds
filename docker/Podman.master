@@ -50,7 +50,8 @@ RUN if [[ "$TARGETPLATFORM" = */arm64 ]]; then \
     curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb && \
         gdebi --non-interactive quarto-linux-amd64.deb && \
         rm quarto-linux-amd64.deb; \
-  fi
+  fi \
+  quarto update tool tinytex --no-prompt
 
 # Tidy up
 RUN rm -rf /var/lib/apt/lists/*
