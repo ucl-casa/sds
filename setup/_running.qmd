@@ -8,25 +8,27 @@ You can use a single command to download and start the `{{< var env.name >}}` **
 ## Mac (Intel/AMD64)
 
 ```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 \
+podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
    -v "$(pwd):/home/jovyan/work" \
   {{< var docker.all >}} start.sh jupyter lab \
+  --NotebookApp.notebook_dir='/home/jovyan/work \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ## Macs (Apple Silicon/ARM64)
 
 ```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 \
+podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
    -v "$(pwd):/home/jovyan/work" \
   {{< var docker.mac >}} start.sh jupyter lab \
+  --NotebookApp.notebook_dir='/home/jovyan/work \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ## Windows (Intel/AMD64)
 
 ```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -v "$(pwd):/home/jovyan/work" {{< var docker.all >}} start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 -v "$(pwd):/home/jovyan/work" {{< var docker.all >}} start.sh jupyter lab --NotebookApp.notebook_dir='/home/jovyan/work --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ## Windows (ARM64)

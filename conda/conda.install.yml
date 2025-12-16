@@ -29,6 +29,7 @@ dependencies:
   - geocube
   - geopandas
   - geopy 
+  - great_tables
   - gstools # Multiprocessing
   - h3-py
   - hdbscan
@@ -46,6 +47,7 @@ dependencies:
   - jupyter-lsp-python # Provides LSP Extension + Server
   - jupytext
   - legendgram 
+  - lets-plot
   - libgdal-arrow-parquet
   - lxml
   #- mkl-service

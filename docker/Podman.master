@@ -101,13 +101,13 @@ RUN mamba env update -n base --file $yaml_nm \
 USER $NB_UID
 
 ENV FONTCONF="/home/${NB_USER}/.config/fontconfig/conf.d"
-ENV FONTPATH="/home/${NB_USER}/fonts"
+ENV FONTPATH="/home/${NB_USER}/.fonts"
 
 RUN mkdir -p ${FONTCONF} \
     mkdir -p ${FONTPATH}
 
-COPY ../fonts/conf ${FONTCONF}
-COPY ../fonts/install ${FONTPATH}
+COPY ./fonts/conf ${FONTCONF}
+COPY ./fonts/install ${FONTPATH}
 
 RUN tlmgr init-usertree \ 
     #&& mkdir -p ${FONTCONF} \ 
@@ -145,11 +145,11 @@ RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements" 
     && rm -rf /home/$NB_USER/.cache/rosetta \
     && rm -rf /home/$NB_USER/.cache/yarn \ 
     && rm -rf /home/$NB_USER/.cache/pip \
+    && luaotfload-tool -v -vvv -u \
+    && perl -i -p -e 's|from scipy import inf|from numpy import inf|' /opt/conda/lib/python3.12/site-packages/pysal/lib/cg/kdtree.py
     # Fix permissions
     #&& fix-permissions $CONDA_DIR \
     #&& fix-permissions /home/$NB_USER
-    && luaotfload-tool -v -vvv -u
-    && perl -i -p -e 's|from scipy import inf|from numpy import inf|' /opt/conda/lib/python3.12/site-packages/pysal/lib/cg/kdtree.py
 
 #--- Final steps
 USER $NB_UID

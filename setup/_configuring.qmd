@@ -7,19 +7,25 @@ Here's the quick-start version:
 
 ### Apple MacOS
 
-In iTerm2 you simply type (hitting Enter after each line):
+In iTerm2 you will type (hitting Enter after each line):
+
 ```bash
-podman machine init
+export CONTAINERS_MACHINE_PROVIDER="applehv"
+podman machine init --memory 4092 --rootful
 podman machine start
 ```
+
+It is currently **essential** that you run these commands rather than just create a new machine from within the Podman Desktop. If you fail to specify that your Mac should use the Apple Hypervisor (`applehv`) you will end up with a machine that can't access the host file system. And if you fail to specify `rootful` you'll encounter a similar, though less challenging, issue when dealing with Quarto.
 
 ### Windows
 
 In the Windows Terminal you *should* be able to simply type (hitting Enter/Return after each line):
 ```bash
-podman machine init
+podman machine init --memory 4092 --rootful
 podman machine start
 ```
+
+If you fail to specify that the machine is `rootful` then Quarto will not be able to run and you will receive permission errors when trying to render your assessment.
 
 ::: {.callout-warning}
 ### Unable to Run
@@ -31,3 +37,16 @@ In a small number of cases on Windows we've had error messages about permissions
 ::::
 
 If you'd like to read more about fine-tuning your Podman machine we've [got a page for that](./podman_conf.qmd).
+
+::: {.callout-tip collasped=true}
+### Multiple Virtual Machines
+
+If you'd like to run more than one machine, the interface for this seems a little clunky because all of the tools want to connect to the *default* machine. You can change this in the Podman Desktop, or on Mac/WSL you can create an environment variable like so:
+
+```bash
+export CONTAINER_CONNECTION=<name_of_vm>
+```
+
+Where 'name of vm' is the *other* virtual machine.
+
+:::

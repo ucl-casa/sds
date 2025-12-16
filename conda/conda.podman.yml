@@ -18,7 +18,9 @@ dependencies:
   - descartes
   - duckdb
   - flake8 # Style enforcement
+  - great_tables
   - ipyleaflet
+  - lets-plot
   - matplotlib
   - matplotlib-base 
   - mapclassify

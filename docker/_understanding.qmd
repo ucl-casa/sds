@@ -2,7 +2,7 @@
 
 ### What is Virtualisation?
 
-Docker is 'virtualisation' tool that allows you to run 'virtual machines' on your computer's 'host' operating system. That's a lot of new, probably meaningless words. If you're one of those people who (understandably) likes to understand what's going on then here's how some people define it:
+Like Podman, Docker is 'just' another virtualisation tool that allows you to run virtual machines (VMs) on your computer's 'host' operating system. That's a lot of new, probably meaningless words. If you're one of those people who (understandably) likes to understand what's going on then here's how some people define it:
 
 1. Google on [What is a virtual machine](https://cloud.google.com/learn/what-is-a-virtual-machine#)?
 2. VMWare on [What is a virtual machine](https://www.vmware.com/topics/virtual-machine#)?
