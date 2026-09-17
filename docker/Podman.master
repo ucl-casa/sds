@@ -3,13 +3,15 @@
 #  export IMG_NM=sds:2025-amd && podman build --arch amd64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
 #  podman push <IMAGE ID> docker://docker.io/jreades/sds:2025-<ARCH>
 #
+# Or: make build ARCH=arm64
+#
 
 # podman run --rm -d --name sds -p 8888:8888 \
 #   -v "$(pwd):/home/jovyan/work" \
 #   jreades/sds:2026-arm start.sh jupyter lab \
 #   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 FROM quay.io/jupyter/minimal-notebook:notebook-7.6.2
-# Would like to aim for something slimmer but... 
+# Would like to aim for something slimmer but...
 LABEL maintainer="Jon Reades <j.reades@ucl.ac.uk>"
 
 ARG TARGETARCH
@@ -21,43 +23,24 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 #--- Avoid weird build issue ---#
 RUN mkdir -p /home/${NB_USER}/.cache/conda
 
-#--- Base ---#
+#--- Installer scripts ---#
+# Each script under docker/installers/ is self-contained and cleans
+# up after itself in the same RUN it runs in (see installers/_lib.sh
+# for why that matters). Copied once here so later steps don't repeat
+# the COPY.
 USER root
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
-        # Seem to need gcc and g++ for ARM builds now b/c of spacy
-        gcc \ 
-        g++ \ 
-        librsvg2-bin \
-        fontconfig \
-        texlive-luatex \
-        texlive-latex-base \
-        texlive-fonts-recommended \
-        ##texlive-fonts-extra \
-        lmodern \
-        gdebi-core \
-        xz-utils
-    #&& apt-cache policy musl-dev 
+COPY ./docker/installers/ /tmp/installers/
+RUN chmod +x /tmp/installers/*.sh
+
+#--- Base ---#
+RUN /tmp/installers/apt-base.sh
 # Ideally we could skip the apt-get update
-# if we knew where musl-dev is available to 
+# if we knew where musl-dev is available to
 # download.
 
 #--- Install Quarto ---#
 # Use the target platform to specify the Quarto version
-RUN if [[ "$TARGETARCH" = arm64 ]]; then \
-    curl -LO https://quarto.org/download/latest/quarto-linux-arm64.deb && \
-        gdebi --non-interactive quarto-linux-arm64.deb && \
-        rm quarto-linux-arm64.deb; \
-  else \
-    curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb && \
-        gdebi --non-interactive quarto-linux-amd64.deb && \
-        rm quarto-linux-amd64.deb; \
-  fi
-
-RUN quarto update tool tinytex --no-prompt
-
-# Tidy up
-RUN rm -rf /var/lib/apt/lists/*
+RUN /tmp/installers/quarto.sh "${TARGETARCH}"
 
 #--- Python ---#
 USER $NB_UID
@@ -66,16 +49,7 @@ ENV env_path '/opt/conda/'
 
 ADD ../conda/$yaml_nm ./
 
-RUN mamba env update -n base --file $yaml_nm \
-    && mamba clean --all --yes --force-pkgs-dirs \ 
-    && rm $yaml_nm \
-    && conda clean --all --yes --force-pkgs-dirs \
-    && find /opt/conda/ -follow -type f -name '*.a' -delete \
-    && find /opt/conda/ -follow -type f -name '*.pyc' -delete \
-    && find /opt/conda/ -follow -type f -name '*.js.map' -delete \
-    #&& find "${env_path}/lib/python*/site-packages/bokeh/server/static" \
-    #   -follow -type f -name '*.js' ! -name '*.min.js' -delete \
-    && pip cache purge 
+RUN /tmp/installers/conda-env.sh
 
 #--- Install some fonts ---#
 #####################
@@ -107,53 +81,26 @@ USER $NB_UID
 ENV FONTCONF="/home/${NB_USER}/.config/fontconfig/conf.d"
 ENV FONTPATH="/home/${NB_USER}/.fonts"
 
-RUN mkdir -p ${FONTCONF} \
-    mkdir -p ${FONTPATH}
-
 COPY ./fonts/conf ${FONTCONF}
 COPY ./fonts/install ${FONTPATH}
 
-RUN tlmgr init-usertree \ 
-    #&& mkdir -p ${FONTCONF} \ 
-    #&& mkdir -p ${FONTPATH} \
-    #&& mv ./fontsrc/?-fonts.conf ${FONTCONF}/ \
-    #&& mv ./fontsrc/*.ttf ${FONTPATH}
-    && fc-cache -f -v \
-    && rm -rf ./fontsrc
-    #&& rm -f ~/.cache/matplotlib/fontlist*.json || true \
-    #&& python -c "from matplotlib.font_manager import findfont; findfont('sans', rebuild_if_missing=True)"
+RUN /tmp/installers/fonts.sh
 
-# This bloats the Docker image but not massively
-# Should rebuild the font manager and allow us to access
-# the fonts we've just added in Matplotlib... *should*
-RUN source activate ${env_nm} \
-    && mkdir -p "/home/$NB_USER/.cache/black/$(black --version | head -n 1 | cut -d ' ' -f 2)" \
-    && black --code "print ( 'hello, world' )" \
-    && MPLBACKEND=Agg python -c "import matplotlib.pyplot" \
-    && python -c "import matplotlib.font_manager;" \
-    && python -c "import logging; logging.basicConfig(level='INFO'); import black" \
-    && conda deactivate
+# This bloats the image slightly but not massively.
+# Rebuilds the font manager and warms imports so they're
+# not paid for on first notebook run.
+RUN /tmp/installers/python-preload.sh
 
 
 #--- Tidy and fix permissions ---#
 USER root
 
-# Disable message
-RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements" \
-    # Clean up
-    && jupyter lab clean -y \
-    && conda clean --all -f -y \
-    && rm -rf $CONDA_DIR/share/jupyter/lab/staging \
-    && rm -rf /home/$NB_USER/.node-gyp/* \
-    && rm -rf /home/$NB_USER/.local/* \
-    && rm -rf /home/$NB_USER/.cache/rosetta \
-    && rm -rf /home/$NB_USER/.cache/yarn \ 
-    && rm -rf /home/$NB_USER/.cache/pip \
-    && luaotfload-tool -v -vvv -u \
-    && perl -i -p -e 's|from scipy import inf|from numpy import inf|' /opt/conda/lib/python3.13/site-packages/libpysal/cg/kdtree.py
-    # Fix permissions
-    #&& fix-permissions $CONDA_DIR \
-    #&& fix-permissions /home/$NB_USER
+# Disable message, clean caches, fix known-bad libpysal import.
+# finalize.sh also removes /tmp/installers once it's done with it.
+RUN /tmp/installers/finalize.sh
+# Fix permissions (currently unused):
+#   fix-permissions $CONDA_DIR
+#   fix-permissions /home/$NB_USER
 
 #--- Final steps
 USER $NB_UID
@@ -168,10 +115,10 @@ USER $NB_UID
 # ENV SPACY_DATA_DIR=/home/$NB_USER/work/spacy-data
 # ENV XDG_CACHE_HOME=/home/$NB_USER/.cache/
 
-# RUN echo "export PATH=$env_path/bin/:$PATH" >> ~/.bashrc 
+# RUN echo "export PATH=$env_path/bin/:$PATH" >> ~/.bashrc
 # RUN echo "export PROJ_LIB=$PROJ_LIB" >> ~/.bashrc
-# RUN echo "export GENSIM_DATA_DIR=$GENSIM_DATA_DIR # python -m gensim.downloader --download <dataname>" >> ~/.bashrc 
-# RUN echo "export SPACY_DATA_DIR=$SPACY_DATA_DIR # spacy.load('/path/to/en_core_web_sm')" >> ~/.bashrc 
+# RUN echo "export GENSIM_DATA_DIR=$GENSIM_DATA_DIR # python -m gensim.downloader --download <dataname>" >> ~/.bashrc
+# RUN echo "export SPACY_DATA_DIR=$SPACY_DATA_DIR # spacy.load('/path/to/en_core_web_sm')" >> ~/.bashrc
 # RUN echo "export XDG_CACHE_HOME=$XDG_CACHE_HOME" >> ~/.bashrc
 
 #--- Configure startup params ---#
@@ -181,6 +128,6 @@ USER $NB_UID
 # VSCode Extension Folder (optional usage)
 RUN mkdir -p /home/$NB_USER/.vscode-server/extensions \
             /home/$NB_USER/.vscode-server-insiders/extensions \
-    && chown -R $NB_UID \ 
+    && chown -R $NB_UID \
             /home/$NB_USER/.vscode-server \
             /home/$NB_USER/.vscode-server-insiders
