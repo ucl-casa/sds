@@ -5,7 +5,7 @@
 #   OR:
 #   conda install -c conda-forge --solver=classic ...
 #
-# name: sds2024
+# name: sds2026
 channels:
   - conda-forge
 dependencies: 
@@ -19,15 +19,17 @@ dependencies:
   - cubo # Data Cubes from GEE and STAC
   - cython
   #- cmake<3.20
-  - dask
-  - dask-geopandas
-  - datashader
+  #- dask
+  #- dask-geopandas
+  #- datashader
   - descartes
+  - duckdb
   - flake8 # Style enforcement
+  - folium
   - gensim 
   - geoalchemy2 # PostGIS geometries
   - geocube
-  - geopandas
+  - geopandas[all]
   - geopy 
   - great_tables
   - gstools # Multiprocessing
@@ -39,7 +41,7 @@ dependencies:
   - ipyparallel
   - ipympl
   - ipywidgets
-  - jupyterlab>=4.0 
+  - jupyterlab>4.0 
   - jupyter_bokeh
   - jupyterlab_code_formatter # Supports labextension
   - jupyterlab-geojson
@@ -49,7 +51,11 @@ dependencies:
   - legendgram 
   - lets-plot
   - libgdal-arrow-parquet
+  - lonboard
   - lxml
+  - matplotlib
+  - matplotlib-base
+  - mapclassify
   #- mkl-service
   - mgwr 
   - momepy
@@ -57,20 +63,25 @@ dependencies:
   #- networkx 
   - nltk 
   #- numba
+  - numpy
+  - odfpy
   - openpyxl
   #- osmnx
   - palettable 
+  - pandas
+  - packaging
   - pip
   - pip:
     - boruta # Supports feature selection
     - contractions 
     - dtreeviz
     - dtreeviz[xgboost]
-    - esda # (alternative to PySAL stuff)
     - fastai #==1.0.61 # Huanfa's QM
+    - frogmouth # Terminal-based Markdown editor
     - gurobipy #==9.5.1 # Huanfa's QM
     #- git+https://github.com/smazzanti/mrmr # Supports feature selection
     #- git+http://github.com/kingsgeocomp/SOMPY#egg=sompy
+    - ipyopenlayers
     - joypy
     - jupyterlab-quarto
     - kneed
@@ -78,6 +89,7 @@ dependencies:
     - libpysal
     - lightgbm 
     - matplotlib-scalebar 
+    - matplotlib-map-utils
     #- mpl_toolkits
     #- num2words
     - pulp #==2.6.0 # Huanfa's QM
@@ -102,17 +114,20 @@ dependencies:
   - pyarrow
   - pydub
   - pyogrio
+  - pyproj
   - pysal
   - pyzmq
   - python-duckdb
-  #- qgrid 
+  - qgrid 
   - rasterio
   - rasterstats
   - rio-cogeo
   - rioxarray
+  - scipy
   - scikit-learn
   - seaborn
   - shap
+  - shapely
   - spatialpandas
 #  - spacy 
 #  - spacy[transformer]  # Add too much to image
@@ -129,4 +144,3 @@ dependencies:
   - xlrd
   - xlsxwriter
   - xvec
-  - ydata-profiling
