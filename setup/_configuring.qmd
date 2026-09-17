@@ -7,6 +7,13 @@ Here's the quick-start version:
 
 ### Apple MacOS
 
+::: {.callout-important}
+#### Don't skip this step
+
+It is currently **essential** that you run these commands rather than just create a new machine from within the Podman Desktop. If you fail to specify that your Mac should use the Apple Hypervisor (`applehv`) you will end up with a machine that can't access the host file system. And if you fail to specify `rootful` you'll encounter a similar, though less challenging, issue when dealing with Quarto.
+
+:::
+
 In iTerm2 you will type (hitting Enter after each line):
 
 ```bash
@@ -14,8 +21,6 @@ export CONTAINERS_MACHINE_PROVIDER="applehv"
 podman machine init --memory 4092 --rootful
 podman machine start
 ```
-
-It is currently **essential** that you run these commands rather than just create a new machine from within the Podman Desktop. If you fail to specify that your Mac should use the Apple Hypervisor (`applehv`) you will end up with a machine that can't access the host file system. And if you fail to specify `rootful` you'll encounter a similar, though less challenging, issue when dealing with Quarto.
 
 ### Windows
 

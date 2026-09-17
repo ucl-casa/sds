@@ -3,6 +3,8 @@ project:
   output-dir: _site
   preview:
     port: 4202
+  post-render:
+    - tools/axe_nav_fixes.py
   render:
     - "*.qmd"
   resources:
@@ -25,17 +27,20 @@ website:
   reader-mode: true
   page-footer: 
     left: "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 2022–2025, Jon Reades"
-    center: "![](/img/logo/full_sm.png){height=20} CASA Computing Platform"
-    right: 
+    center: '![](/img/logo/full_sm.png){height=20 fig-alt="CASA Logo"} CASA Computing Platform'
+    right:
       - icon: github
         href: https://github.com/ucl-casa/sds
-      - icon: twitter 
+        aria-label: GitHub
+      - icon: twitter
         href: https://web-cdn.bsky.app/profile/did:plc:mpmxzig3akrleyfhl5vfnvk4
+        aria-label: Bluesky
   navbar:
     background: primary
     number-depth: 2
     search: true
     logo: small
+    logo-alt: "CASA Computing Platform home"
     collapse: true
     collapse-below: md
     left:
@@ -84,6 +89,7 @@ format:
   html:
     axe:
       output: console
+      #output: document
     theme: 
       - minty
       - css/casa-report.scss

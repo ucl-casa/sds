@@ -38,7 +38,7 @@ None outstanding.
 
 This draws heavily on Dani Arribas-Bel's work for Liverpool.
 
-[![DOI](https://zenodo.org/badge/65582539.svg)](https://zenodo.org/badge/latestdoi/65582539)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10036934.svg){fig-alt="Zenodo DOI badge"}](https://zenodo.org/badge/latestdoi/65582539)
 
 ```bibtex
 @software{gds,

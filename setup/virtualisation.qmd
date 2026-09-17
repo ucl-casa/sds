@@ -30,7 +30,7 @@ Here's what's happening:
 
 You issue the `podman pull {{< var docker.base >}}` (or `docker pull {{< var docker.base >}}`) command to your computer, which turns around and asks the Hub for a copy of this image. The Hub responds by transferring a copy of the `{{< var docker.base >}}` **image** to your computer. You now have a file containing all the instructions to set up and run a **virtual machine** on your computer.^[A virtual machine is just a computer that runs _on_ your computer. So it 'borrows' resources like hard drive space, memory, and processor in order to behave like an independent computer that you can interact with in various ways.]
 
-### Step 2, `docker run`
+### Step 2, `podman run`/`docker run`
 
 You will issue the `podman run ... {{< var docker.base >}} ...` command (or `docker run ...`) from the command line (or terminal) of your computer, and this tells Docker/Podman to use the `{{< var docker.base >}}` **image** as a template for creating a **container** called `{{< var env.name >}}`^[A container is the name Podman/Docker uses to refer to a _running_ virtual machine. The image on its own does nothing until you tell docker to `run` it, at which point it becomes a container!]. `{{< var env.name >}}` will do _whatever_ it was told to do by its creator. This could be wait to run Python code, start up a database, serve web pages, the list is practically endless. But {{< var env.name >}} is _read-only_, although you can make changes to the container while it's running, as soon as you shut it down those changes are lost. So you cannot break an image, only a container. And if you do that, you delete the container and start a new one from the image... we can cover this if you ever do it.
 
@@ -50,4 +50,3 @@ At the bottom of the Figure above you can see a *full* `run` command, here we ju
 - `-v`: this specified the point on your hard drive that the {{< var env.name >}} can use. By default we use `$(pwd)` which means 'use the location where the `docker run` command was executed. You can also 'hard code' this to something like `/Users/<your username>/Documents/casa/` if you always want to use the same location.
 - `-p`: this specified the channel (or `port`) on which the web browser can talk to the {{< var env.name >}}.
 - `{{< var docker.base >}}`: this specified the image we wanted to use
-

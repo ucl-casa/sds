@@ -15,7 +15,7 @@ Steps:
 
 ::: {.callout-warning}
 
-### Not There?
+## Not There?
 
 If Docker is not storing its data in `C:\Users\<YourUsername>\AppData\Local\Docker` on your machine, it may be using a different setup or storage backend. 
 
@@ -23,7 +23,7 @@ If Docker is not storing its data in `C:\Users\<YourUsername>\AppData\Local\Dock
 
 Steps to Change Docker's Storage Location on Windows 10 Pro:
 
-### Check Docker's Current Storage Path:
+## Check Docker's Current Storage Path:
 
 Docker stores container data in a specific location. If you're using WSL 2 (Windows Subsystem for Linux 2) backend, the data might be stored within WSL's file system, which differs from traditional Docker setups.
 
@@ -36,7 +36,7 @@ docker info
 
 Look for `Docker Root Dir:` in the output. This shows where Docker is storing its containers and images.
 
-### Change Docker's Root Directory (Daemon Configuration):
+## Change Docker's Root Directory (Daemon Configuration):
 
 To change where Docker stores its data, you'll need to modify the daemon configuration file (`daemon.json`).
 
@@ -64,7 +64,7 @@ If Docker's configuration folder (daemon.json) is not located in `C:\ProgramData
 
 Here are a few places to check for the `daemon.json` file:
 
-#### For Docker using Hyper-V or traditional backend:
+### For Docker using Hyper-V or traditional backend:
 
 Check for the folder at:
 ```bash
@@ -73,7 +73,7 @@ C:\ProgramData\Docker\config\
 
 If it doesn't exist, try creating it manually and adding the daemon.json file.
 
-#### For Docker using WSL 2 backend:
+### For Docker using WSL 2 backend:
 
 You may find Docker's WSL-specific configuration within the WSL file system. Check:
 ```bash

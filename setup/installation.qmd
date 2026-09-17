@@ -45,4 +45,3 @@ If you encounter any problems with the installation, please have a look at the [
 ## Success!
 
 {{< include ./_success.qmd >}}
-

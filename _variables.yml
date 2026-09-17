@@ -1,4 +1,4 @@
-version: 2025
+version: 2026
 
 module:
   code: "casa0013"
@@ -7,10 +7,10 @@ module:
 
 env:
   display: "SDS"
-  name: "sds2025"
-  year: 2025
+  name: "sds2026"
+  year: 2026
 
 docker:
-  base: "jreades/sds:2025"
-  all: "docker.io/jreades/sds:2025-amd"
-  mac: "docker.io/jreades/sds:2025-arm"
+  base: "jreades/sds:2026"
+  all: "docker.io/jreades/sds:2026-amd"
+  mac: "docker.io/jreades/sds:2026-arm"
