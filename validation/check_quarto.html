@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jon Reades">
-<meta name="dcterms.date" content="2025-07-11">
+<meta name="dcterms.date" content="2024-09-07">
 
-<title>Understanding Virtualisation – CASA Computing Platform</title>
+<title>Summary of Reading – CASA Computing Platform</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -28,17 +28,71 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../setup/problems.html" rel="prev">
 <link href="..//img/favicon.ico" rel="icon">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -57,9 +111,6 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-5160cc28a9f167e24e8abc569a7e6734.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-5160cc28a9f167e24e8abc569a7e6734.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-5160cc28a9f167e24e8abc569a7e6734.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
-<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -87,19 +138,19 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
-<meta property="og:title" content="Understanding Virtualisation – CASA Computing Platform">
+<meta property="og:title" content="Summary of Reading – CASA Computing Platform">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://ucl-casa.github.io/sds/img/Docker.png">
+<meta property="og:image" content="https://ucl-casa.github.io/sds/validation/img/CASA_Logo_no_text.png">
 <meta property="og:site_name" content="CASA Computing Platform">
 <meta property="og:locale" content="en_GB">
-<meta property="og:image:alt" content="Sketch of Podman/Docker Usage">
-<meta property="og:image:height" content="2250">
-<meta property="og:image:width" content="4000">
 </head>
 
-<body class="nav-sidebar docked nav-fixed quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -204,92 +255,32 @@ ul.task-list li input[type="checkbox"] {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav" aria-label="Secondary navigation">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../setup/virtualisation.html">About Virtualisation</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" tabindex="0" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto" aria-label="Section navigation">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../index.html" class="sidebar-logo-link">
-      <img src="../img/logo/full_md.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="../img/logo/full_md.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
-      </a>
-      </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../setup/health.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Step 1. Health Check</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../setup/base.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Step 2. Base Utilities</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../setup/installation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Step 3. Installation</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../setup/install_fest.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">All-In-One</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../setup/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Common Problems</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../setup/virtualisation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">About Virtualisation</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" aria-label="Table of contents" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul>
-  <li><a href="#what-is-virtualisation" id="toc-what-is-virtualisation" class="nav-link active" data-scroll-target="#what-is-virtualisation">What is Virtualisation?</a></li>
-  <li><a href="#podmandocker-in-a-nutshell" id="toc-podmandocker-in-a-nutshell" class="nav-link" data-scroll-target="#podmandocker-in-a-nutshell">Podman/Docker in a Nutshell</a>
   <ul class="collapse">
-  <li><a href="#step-1.-podman-pulldocker-pull" id="toc-step-1.-podman-pulldocker-pull" class="nav-link" data-scroll-target="#step-1.-podman-pulldocker-pull">Step 1. <code>podman pull</code>/<code>docker pull</code></a></li>
-  <li><a href="#step-2-podman-rundocker-run" id="toc-step-2-podman-rundocker-run" class="nav-link" data-scroll-target="#step-2-podman-rundocker-run">Step 2, <code>podman run</code>/<code>docker run</code></a></li>
-  <li><a href="#step-3.-interacting-with-the-container" id="toc-step-3.-interacting-with-the-container" class="nav-link" data-scroll-target="#step-3.-interacting-with-the-container">Step 3. Interacting with the Container</a></li>
-  <li><a href="#step-4.-anatomy-of-run" id="toc-step-4.-anatomy-of-run" class="nav-link" data-scroll-target="#step-4.-anatomy-of-run">Step 4. Anatomy of <code>run</code></a></li>
-  </ul></li>
+  <li><a href="#what-kind-of-reading-is-it" id="toc-what-kind-of-reading-is-it" class="nav-link active" data-scroll-target="#what-kind-of-reading-is-it"><span class="header-section-number">1</span> What kind of reading is it?</a></li>
+  <li><a href="#who-is-the-intended-audience" id="toc-who-is-the-intended-audience" class="nav-link" data-scroll-target="#who-is-the-intended-audience"><span class="header-section-number">2</span> Who is the intended audience?</a></li>
+  <li><a href="#how-is-the-piece-structured" id="toc-how-is-the-piece-structured" class="nav-link" data-scroll-target="#how-is-the-piece-structured"><span class="header-section-number">3</span> How is the piece structured?</a></li>
+  <li><a href="#what-are-the-key-ideas-concepts-or-theories-discussed" id="toc-what-are-the-key-ideas-concepts-or-theories-discussed" class="nav-link" data-scroll-target="#what-are-the-key-ideas-concepts-or-theories-discussed"><span class="header-section-number">4</span> What are the key ideas, concepts, or theories discussed?</a></li>
+  <li><a href="#what-is-the-overall-contribution" id="toc-what-is-the-overall-contribution" class="nav-link" data-scroll-target="#what-is-the-overall-contribution"><span class="header-section-number">5</span> What is the overall contribution?</a></li>
+  <li><a href="#what-issues-or-gaps-remain" id="toc-what-issues-or-gaps-remain" class="nav-link" data-scroll-target="#what-issues-or-gaps-remain"><span class="header-section-number">6</span> What issues or gaps remain?</a></li>
+  <li><a href="#another-reference" id="toc-another-reference" class="nav-link" data-scroll-target="#another-reference"><span class="header-section-number">7</span> Another reference</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/jreades/sds_env/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/jreades/sds_env/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="check_quarto.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Understanding Virtualisation</h1>
+<h1 class="title">Summary of Reading</h1>
 </div>
 
 
@@ -306,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 11, 2025</p>
+      <p class="date">September 7, 2024</p>
     </div>
   </div>
   
@@ -318,76 +309,180 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="what-is-virtualisation" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-virtualisation">What is Virtualisation?</h2>
-<p>Podman and Docker are ‘virtualisation’ tools that allows you to run ‘virtual machines’ on your computer’s ‘host’ operating system. That’s a lot of new, probably meaningless words. If you’re one of those people who (understandably) likes to understand what’s going on then here’s how some people define it:</p>
-<ol type="1">
-<li>Google on <a href="https://cloud.google.com/learn/what-is-a-virtual-machine#">What is a virtual machine</a>?</li>
-<li>VMWare on <a href="https://www.vmware.com/topics/virtual-machine#">What is a virtual machine</a>?</li>
-<li>Microsoft on <a href="https://azure.microsoft.com/en-gb/resources/cloud-computing-dictionary/what-is-a-virtual-machine">What is a virtual machine (VM)</a>?</li>
-</ol>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Docker v. Podman
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>You can find out more about Podman and Docker <a href="../setup/docker_vs_podman.html">here</a></p>
-</div>
-</div>
+<p>To test this file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render check_quarto.qmd <span class="at">--to</span> pdf </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render check_quarto.qmd <span class="at">--to</span> html </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="what-kind-of-reading-is-it" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="what-kind-of-reading-is-it"><span class="header-section-number">1</span> What kind of reading is it?</h2>
+<blockquote class="blockquote">
+<p>Is it an academic paper, technical report, blogpost, etc.? And what kind of contribution is trying to make? Conceptual, theoretical, empirical or something else?</p>
+</blockquote>
 </section>
-<section id="podmandocker-in-a-nutshell" class="level2">
-<h2 class="anchored" data-anchor-id="podmandocker-in-a-nutshell">Podman/Docker in a Nutshell</h2>
-<p>So in order to make use of Podman/Docker (and understand what’s happening when you get errors), it’s helpful to have <em>some</em> sense of what’s going on behind the scenes. You can click on the image below to make it larger, or you can download and print out <a href="../img/Docker.pdf">a PDF version</a>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="../img/Docker.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Sketch of Podman/Docker Usage"><img src="../img/Docker.png" class="img-fluid figure-img" alt="Sketch of Podman/Docker Usage"></a></p>
-<figcaption>Sketch of Podman/Docker Usage</figcaption>
-</figure>
+<section id="who-is-the-intended-audience" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="who-is-the-intended-audience"><span class="header-section-number">2</span> Who is the intended audience?</h2>
+<blockquote class="blockquote">
+<p>Is it intended for academics, field experts, the general public? etc.? For example, if you think this is intended for someone who needs to learn new skills or someone who is in a policy-making position how do you know this?</p>
+</blockquote>
+</section>
+<section id="how-is-the-piece-structured" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="how-is-the-piece-structured"><span class="header-section-number">3</span> How is the piece structured?</h2>
+<blockquote class="blockquote">
+<p>Briefly, how is it organised in terms of headings, sub-headings, sections, etc.? Can you explain this structure responds to the kind of reading and type of audience?</p>
+</blockquote>
+</section>
+<section id="what-are-the-key-ideas-concepts-or-theories-discussed" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="what-are-the-key-ideas-concepts-or-theories-discussed"><span class="header-section-number">4</span> What are the key ideas, concepts, or theories discussed?</h2>
+<blockquote class="blockquote">
+<p>Briefly identify the specific areas that the contribution engages with. How do you know this?</p>
+</blockquote>
+</section>
+<section id="what-is-the-overall-contribution" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="what-is-the-overall-contribution"><span class="header-section-number">5</span> What is the overall contribution?</h2>
+<blockquote class="blockquote">
+<p>What does it build on or what gap does it respond to? What are the key findings or conclusions?</p>
+</blockquote>
+</section>
+<section id="what-issues-or-gaps-remain" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="what-issues-or-gaps-remain"><span class="header-section-number">6</span> What issues or gaps remain?</h2>
+<blockquote class="blockquote">
+<p>If relevant, are there assumptions that might not hold in other contexts? Can you think of other case studies or contexts where the reading would apply and explain why? If you think the contribution is generally valid can you explain why? Are there areas for future work identified?</p>
+</blockquote>
+</section>
+<section id="another-reference" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="another-reference"><span class="header-section-number">7</span> Another reference</h2>
+<p>Let’s check that references work <span class="citation" data-cites="dignazio:2020ch5">(e.g. <a href="#ref-dignazio:2020ch5" role="doc-biblioref">D’Ignazio and Klein 2020</a>)</span>.</p>
+<p>And here’s some Python output:</p>
+<div id="f24d632f" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div id="vqlltpxsze" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>
+#vqlltpxsze table {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+#vqlltpxsze thead, tbody, tfoot, tr, td, th { border-style: none; }
+ tr { background-color: transparent; }
+#vqlltpxsze p { margin: 0; padding: 0; }
+ #vqlltpxsze .gt_table { display: table; border-collapse: collapse; line-height: normal; margin-left: auto; margin-right: auto; color: #333333; font-size: 16px; font-weight: normal; font-style: normal; background-color: #FFFFFF; width: auto; border-top-style: solid; border-top-width: 2px; border-top-color: #A8A8A8; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #A8A8A8; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; }
+ #vqlltpxsze .gt_caption { padding-top: 4px; padding-bottom: 4px; }
+ #vqlltpxsze .gt_title { color: #333333; font-size: 125%; font-weight: initial; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; border-bottom-color: #FFFFFF; border-bottom-width: 0; }
+ #vqlltpxsze .gt_subtitle { color: #333333; font-size: 85%; font-weight: initial; padding-top: 3px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; border-top-color: #FFFFFF; border-top-width: 0; }
+ #vqlltpxsze .gt_heading { background-color: #FFFFFF; text-align: center; border-bottom-color: #FFFFFF; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #vqlltpxsze .gt_bottom_border { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #vqlltpxsze .gt_col_headings { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; }
+ #vqlltpxsze .gt_col_heading { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px; overflow-x: hidden; }
+ #vqlltpxsze .gt_column_spanner_outer { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; padding-top: 0; padding-bottom: 0; padding-left: 4px; padding-right: 4px; }
+ #vqlltpxsze .gt_column_spanner_outer:first-child { padding-left: 0; }
+ #vqlltpxsze .gt_column_spanner_outer:last-child { padding-right: 0; }
+ #vqlltpxsze .gt_column_spanner { border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 5px; overflow-x: hidden; display: inline-block; width: 100%; }
+ #vqlltpxsze .gt_spanner_row { border-bottom-style: hidden; }
+ #vqlltpxsze .gt_group_heading { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; text-align: left; }
+ #vqlltpxsze .gt_empty_group_heading { padding: 0.5px; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; vertical-align: middle; }
+ #vqlltpxsze .gt_from_md> :first-child { margin-top: 0; }
+ #vqlltpxsze .gt_from_md> :last-child { margin-bottom: 0; }
+ #vqlltpxsze .gt_row { padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden; }
+ #vqlltpxsze .gt_stub { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; }
+ #vqlltpxsze .gt_stub_row_group { color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: initial; text-transform: inherit; border-right-style: solid; border-right-width: 2px; border-right-color: #D3D3D3; padding-left: 5px; padding-right: 5px; vertical-align: top; }
+ #vqlltpxsze .gt_row_group_first td { border-top-width: 2px; }
+ #vqlltpxsze .gt_row_group_first th { border-top-width: 2px; }
+ #vqlltpxsze .gt_striped { background-color: rgba(128,128,128,0.05); }
+ #vqlltpxsze .gt_table_body { border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; }
+ #vqlltpxsze .gt_sourcenotes { color: #333333; background-color: #FFFFFF; border-bottom-style: none; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 2px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 2px; border-right-color: #D3D3D3; }
+ #vqlltpxsze .gt_sourcenote { font-size: 90%; padding-top: 4px; padding-bottom: 4px; padding-left: 5px; padding-right: 5px; text-align: left; }
+ #vqlltpxsze .gt_left { text-align: left; }
+ #vqlltpxsze .gt_center { text-align: center; }
+ #vqlltpxsze .gt_right { text-align: right; font-variant-numeric: tabular-nums; }
+ #vqlltpxsze .gt_font_normal { font-weight: normal; }
+ #vqlltpxsze .gt_font_bold { font-weight: bold; }
+ #vqlltpxsze .gt_font_italic { font-style: italic; }
+ #vqlltpxsze .gt_super { font-size: 65%; }
+ #vqlltpxsze .gt_footnote_marks { font-size: 75%; vertical-align: 0.4em; position: initial; }
+ #vqlltpxsze .gt_asterisk { font-size: 100%; vertical-align: 0; }
+ 
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="5" class="gt_heading gt_title gt_font_normal"><strong>City Information</strong></td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border"><em>Basic information about some English cities.</em></td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="Name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Name</th>
+<th id="Rank" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Rank</th>
+<th id="Longitude" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Longitude</th>
+<th id="Latitude" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Latitude</th>
+<th id="Population" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Population</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left">London</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_right">−0.13</td>
+<td class="gt_row gt_right">51.51</td>
+<td class="gt_row gt_right">9,787,426.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Manchester</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_right">−2.25</td>
+<td class="gt_row gt_right">53.48</td>
+<td class="gt_row gt_right">2,705,000.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">Birmingham</td>
+<td class="gt_row gt_right">3</td>
+<td class="gt_row gt_right">−1.90</td>
+<td class="gt_row gt_right">52.48</td>
+<td class="gt_row gt_right">1,141,816.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Edinburgh</td>
+<td class="gt_row gt_right">4</td>
+<td class="gt_row gt_right">−3.19</td>
+<td class="gt_row gt_right">55.95</td>
+<td class="gt_row gt_right">901,455.00</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left">Inverness</td>
+<td class="gt_row gt_right">5</td>
+<td class="gt_row gt_right">−4.22</td>
+<td class="gt_row gt_right">57.48</td>
+<td class="gt_row gt_right">70,000.00</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left">Lerwick</td>
+<td class="gt_row gt_right">6</td>
+<td class="gt_row gt_right">−1.15</td>
+<td class="gt_row gt_right">60.16</td>
+<td class="gt_row gt_right">6,958.00</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
-<p>Here’s what’s happening:</p>
-<section id="step-1.-podman-pulldocker-pull" class="level3">
-<h3 class="anchored" data-anchor-id="step-1.-podman-pulldocker-pull">Step 1. <code>podman pull</code>/<code>docker pull</code></h3>
-<p>You issue the <code>podman pull jreades/sds:2026</code> (or <code>docker pull jreades/sds:2026</code>) command to your computer, which turns around and asks the Hub for a copy of this image. The Hub responds by transferring a copy of the <code>jreades/sds:2026</code> <strong>image</strong> to your computer. You now have a file containing all the instructions to set up and run a <strong>virtual machine</strong> on your computer.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-</section>
-<section id="step-2-podman-rundocker-run" class="level3">
-<h3 class="anchored" data-anchor-id="step-2-podman-rundocker-run">Step 2, <code>podman run</code>/<code>docker run</code></h3>
-<p>You will issue the <code>podman run ... jreades/sds:2026 ...</code> command (or <code>docker run ...</code>) from the command line (or terminal) of your computer, and this tells Docker/Podman to use the <code>jreades/sds:2026</code> <strong>image</strong> as a template for creating a <strong>container</strong> called <code>sds2026</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. <code>sds2026</code> will do <em>whatever</em> it was told to do by its creator. This could be wait to run Python code, start up a database, serve web pages, the list is practically endless. But sds2026 is <em>read-only</em>, although you can make changes to the container while it’s running, as soon as you shut it down those changes are lost. So you cannot break an image, only a container. And if you do that, you delete the container and start a new one from the image… we can cover this if you ever do it.</p>
-<p>As part of the <code>run</code> command, we also told Docker/Podman what resources the container could access. There are two main types of resources for our purposes:</p>
-<ul>
-<li>A <strong>mount point</strong> which is a part of your computer’s hard drive that we can use to write things down permanently. We use <code>$(pwd)</code>, which is short-hand for <code>print working directory</code> and refers to the ‘place’ on your computer where we issued the <code>docker run</code> command. We tell the platform to connect this to a directory called <code>work</code> (which resides in <code>/home/jovyan/</code>) on the <code>sds2026</code> container. This allows you to share data between the container and your computer, and for changes to be saved when you shut down.</li>
-<li>One or more <strong>ports</strong> which are like channels on a radio where the container can talk to other computers (including yours). In this case, we connect port 8888 on <code>sds2026</code> to port 8888 on your computer. And <em>that</em> is why you have to tell your browser to go to <a href="http://localhost:8888"><code>localhost:8888</code></a> to access Jupyter Lab.</li>
-</ul>
-</section>
-<section id="step-3.-interacting-with-the-container" class="level3">
-<h3 class="anchored" data-anchor-id="step-3.-interacting-with-the-container">Step 3. Interacting with the Container</h3>
-<p>Now when you type things into the browser and tell code to ‘run’, what’s actually happening is that your computer is forwarding the request to the container, which does its thing, updates the web page, and this change is then forwarded back to you via the browser.</p>
-</section>
-<section id="step-4.-anatomy-of-run" class="level3">
-<h3 class="anchored" data-anchor-id="step-4.-anatomy-of-run">Step 4. Anatomy of <code>run</code></h3>
-<p>At the bottom of the Figure above you can see a <em>full</em> <code>run</code> command, here we just want to focus on the most important options (each <code>-X</code> is an option) for most users:</p>
-<ul>
-<li><code>-v</code>: this specified the point on your hard drive that the sds2026 can use. By default we use <code>$(pwd)</code> which means ‘use the location where the <code>docker run</code> command was executed. You can also ’hard code’ this to something like <code>/Users/&lt;your username&gt;/Documents/casa/</code> if you always want to use the same location.</li>
-<li><code>-p</code>: this specified the channel (or <code>port</code>) on which the web browser can talk to the sds2026.</li>
-<li><code>jreades/sds:2026</code>: this specified the image we wanted to use</li>
-</ul>
+</div>
+</div>
+<p>That’s it.</p>
+<section id="references" class="level4">
+
+
 
 
 </section>
 </section>
 
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p>A virtual machine is just a computer that runs <em>on</em> your computer. So it ‘borrows’ resources like hard drive space, memory, and processor in order to behave like an independent computer that you can interact with in various ways.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>A container is the name Podman/Docker uses to refer to a <em>running</em> virtual machine. The image on its own does nothing until you tell docker to <code>run</code> it, at which point it becomes a container!<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section></div></main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-dignazio:2020ch5" class="csl-entry" role="listitem">
+D’Ignazio, Catherine, and Lauren F. Klein. 2020. <span>“Data Feminism.”</span> In. MIT Press. <a href="https://data-feminism.mitpress.mit.edu/">https://data-feminism.mitpress.mit.edu/</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -788,15 +883,6 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation" aria-label="Page navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../setup/problems.html" class="pagination-link" aria-label="Common Problems">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Common Problems</span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-  </div>
-</nav>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
@@ -824,38 +910,6 @@ ul.task-list li input[type="checkbox"] {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-(function() {
-  let previousOnload = window.onload;
-  window.onload = () => {
-    if (previousOnload) {
-      previousOnload();
-    }
-    lightboxQuarto.on('slide_before_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      const href = trigger.getAttribute('href');
-      if (href !== null) {
-        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-        if (imgEl !== null) {
-          const srcAttr = imgEl.getAttribute("src");
-          if (srcAttr && srcAttr.startsWith("data:")) {
-            slideConfig.href = srcAttr;
-          }
-        }
-      } 
-    });
-  
-    lightboxQuarto.on('slide_after_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(slideNode);
-      }
-    });
-  
-  };
-  
-})();
-          </script>
 
 
 
