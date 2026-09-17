@@ -82,6 +82,8 @@ highlight-style: pygments
 
 format:
   html:
+    axe:
+      output: console
     theme: 
       - minty
       - css/casa-report.scss
