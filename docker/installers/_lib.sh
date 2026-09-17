@@ -16,5 +16,6 @@ apt_install() {
 }
 
 apt_cleanup() {
-    rm -rf /var/lib/apt/lists/*
+    apt-get clean
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 }
