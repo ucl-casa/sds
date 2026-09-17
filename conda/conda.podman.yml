@@ -17,14 +17,15 @@ dependencies:
   - cython
   - descartes
   - duckdb
-  - flake8 # Style enforcement
+  - flake8 # Style enforcement
   - great_tables
   - ipyleaflet
-  - lets-plot
+  - lonboard
   - matplotlib
   - matplotlib-base 
   - mapclassify
   - numpy
+  - odfpy
   - pandas 
   - pyogrio 
   - shapely 
@@ -56,12 +57,16 @@ dependencies:
   #- osmnx
   - palettable 
   - pip: # Adds about 500MB
+    #- colorcet # -- Perceptually consistent colormaps
     #- datashader # -- Some problem here, enables visualisation of lots of data
-    #- pointpats # -- Some problem here
-    #- libgdal-arrow-parquet # -- Possible problem
-    #- spatialpandas # -- Possible problem
     #- esda # (alternative to PySAL stuff)
+    - ipyopenlayers # Seems to replace ipyleaflet
+    - frogmouth # Terminal-based Markdown editor
     #- joypy
+    - lets-plot
+    #- libgdal-arrow-parquet # -- Possible problem
+    #- pointpats # -- Some problem here
+    #- spatialpandas # -- Possible problem
     - matplotlib-scalebar 
     - matplotlib-map-utils
   - plotly
