@@ -15,25 +15,38 @@ IMG_NM ?= jreades/sds:$(TAG)-$(ARCH)
 STACK_DIR := docker/stacks
 STACK_FILE := $(STACK_DIR)/conda-explicit-$(ARCH).txt
 
-.PHONY: build test snapshot clean-stacks
+.PHONY: build test snapshot clean-stacks check-arch
 
-build:
+check-arch:
+	@case "$(ARCH)" in \
+		arm64|amd64) ;; \
+		*) echo "ARCH must be arm64 or amd64, got '$(ARCH)'"; exit 1 ;; \
+	esac
+
+build: check-arch
 	podman build --arch $(ARCH) -t $(IMG_NM) --compress -f ./docker/Podman.master --format docker .
 
-# Runs `conda list --explicit` inside the just-built image and diffs it
-# against the committed snapshot. Fails (non-zero exit) if they differ,
-# which is the direct check for "every student gets the same image":
-# if this passes, the image built here matches what was committed as
+# Depends on build so the image under test always matches the current
+# source and this invocation's ARCH/TAG -- otherwise a stale or
+# differently-tagged image could be diffed silently and pass or fail
+# for the wrong reason.
+#
+# Runs `conda list --explicit` inside that image and diffs it against
+# the committed snapshot. Fails (non-zero exit) if they differ, which
+# is the direct check for "every student gets the same image": if
+# this passes, the image built here matches what was committed as
 # the known-good environment.
-test:
+test: build
 	@test -f $(STACK_FILE) || { echo "No snapshot at $(STACK_FILE) yet -- run 'make snapshot' first."; exit 1; }
-	podman run --rm $(IMG_NM) conda list --explicit > /tmp/conda-explicit-$(ARCH).txt
-	diff -u $(STACK_FILE) /tmp/conda-explicit-$(ARCH).txt
+	@tmp=$$(mktemp); \
+	trap 'rm -f "$$tmp"' EXIT; \
+	podman run --rm $(IMG_NM) conda list --explicit > "$$tmp"; \
+	diff -u $(STACK_FILE) "$$tmp"
 
-# Regenerates the committed snapshot from the just-built image. Run
+# Regenerates the committed snapshot from a freshly built image. Run
 # this deliberately after a build whose package changes are wanted,
 # then commit the updated stack file.
-snapshot:
+snapshot: build
 	mkdir -p $(STACK_DIR)
 	podman run --rm $(IMG_NM) conda list --explicit > $(STACK_FILE)
 
