@@ -1,0 +1,5 @@
+{
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "system",
+  "tui": "fullscreen"
+}

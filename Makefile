@@ -5,17 +5,21 @@
 #   make build ARCH=amd64 TAG=2026
 #   make test  ARCH=arm64 TAG=2026
 #   make snapshot ARCH=arm64 TAG=2026   # updates the committed stack file
+#   make build-agent ARCH=arm64 TAG=2026   # optional Claude Code/opencode/Copilot layer
+#   make install-gdsa                       # symlink the gdsa launcher onto PATH
 #
 # ARCH must be one of: arm64, amd64
 # TAG defaults to the current year.
 
-ARCH   ?= arm64
-TAG    ?= $(shell date +%Y)
-IMG_NM ?= jreades/sds:$(TAG)-$(ARCH)
-STACK_DIR := docker/stacks
+ARCH       ?= arm64
+TAG        ?= $(shell date +%Y)
+IMG_NM     ?= jreades/sds:$(TAG)-$(ARCH)
+AGENT_IMG_NM ?= jreades/sds-agent:$(TAG)-$(ARCH)
+GDSA_BIN   ?= $(HOME)/.local/bin/gdsa
+STACK_DIR  := docker/stacks
 STACK_FILE := $(STACK_DIR)/conda-explicit-$(ARCH).txt
 
-.PHONY: build test snapshot clean-stacks check-arch
+.PHONY: build test snapshot clean-stacks check-arch build-agent install-gdsa
 
 check-arch:
 	@case "$(ARCH)" in \
@@ -52,3 +56,40 @@ snapshot: build
 
 clean-stacks:
 	rm -rf $(STACK_DIR)
+
+# Builds the optional agent-harness layer (Claude Code, opencode, GitHub
+# Copilot CLI) on top of an already-built base image. Doesn't rebuild the
+# base image -- run `make build` first if $(IMG_NM) doesn't exist. Harness
+# versions are deliberately unpinned (see frontend_agent/README.md), so
+# CACHEBUST is set fresh on every build to force reinstalling latest.
+build-agent: check-arch
+	@podman image exists $(IMG_NM) || { echo "Base image $(IMG_NM) not found -- run 'make build ARCH=$(ARCH) TAG=$(TAG)' first."; exit 1; }
+	podman build --arch $(ARCH) -t $(AGENT_IMG_NM) \
+		--build-arg base_image=$(IMG_NM) \
+		--build-arg CACHEBUST=$(shell date +%s) \
+		-f ./frontend_agent/Dockerfile \
+		--format docker \
+		./frontend_agent
+	podman tag $(AGENT_IMG_NM) jreades/sds-agent:latest
+	@echo "Built $(AGENT_IMG_NM) (also tagged jreades/sds-agent:latest, gdsa's default). Run 'make install-gdsa' once, then 'gdsa help'."
+
+# Symlinks utils/gdsa onto PATH (default ~/.local/bin/gdsa, override with
+# GDSA_BIN) and seeds ~/.config/opencode with the baked defaults if missing.
+# Idempotent.
+install-gdsa:
+	@mkdir -p "$(dir $(GDSA_BIN))"
+	@ln -sf "$(CURDIR)/utils/gdsa" "$(GDSA_BIN)"
+	@echo "Linked $(GDSA_BIN) -> $(CURDIR)/utils/gdsa"
+	@mkdir -p "$(HOME)/.local/share/opencode" "$(HOME)/.config/opencode"
+	@if [ ! -f "$(HOME)/.config/opencode/opencode.json" ]; then \
+		cp "$(CURDIR)/frontend_agent/opencode.json" "$(HOME)/.config/opencode/opencode.json"; \
+		echo "Seeded ~/.config/opencode/opencode.json"; \
+	fi
+	@if [ ! -f "$(HOME)/.config/opencode/tui.json" ]; then \
+		cp "$(CURDIR)/frontend_agent/tui.json" "$(HOME)/.config/opencode/tui.json"; \
+		echo "Seeded ~/.config/opencode/tui.json"; \
+	fi
+	@case ":$$PATH:" in \
+		*":$(dir $(GDSA_BIN)):"*) echo "$(dir $(GDSA_BIN)) already on PATH." ;; \
+		*) echo "Add to PATH: export PATH=\"$(dir $(GDSA_BIN)):\$$PATH\"" ;; \
+	esac
