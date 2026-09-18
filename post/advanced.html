@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jon Reades">
-<meta name="dcterms.date" content="2025-09-01">
+<meta name="dcterms.date" content="2026-09-18">
 
 <title>Advanced Topics – CASA Computing Platform</title>
 <style>
@@ -287,7 +287,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#bash-script" id="toc-bash-script" class="nav-link active" data-scroll-target="#bash-script">Bash Script</a></li>
+  <li><a href="#multiple-virtual-machines" id="toc-multiple-virtual-machines" class="nav-link active" data-scroll-target="#multiple-virtual-machines">Multiple Virtual Machines</a></li>
+  <li><a href="#bash-script" id="toc-bash-script" class="nav-link" data-scroll-target="#bash-script">Bash Script</a></li>
   <li><a href="#dask-and-quarto" id="toc-dask-and-quarto" class="nav-link" data-scroll-target="#dask-and-quarto">Dask and Quarto</a></li>
   <li><a href="#vscode-integration" id="toc-vscode-integration" class="nav-link" data-scroll-target="#vscode-integration">VSCode Integration</a>
   <ul class="collapse">
@@ -319,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 1, 2025</p>
+      <p class="date">September 18, 2026</p>
     </div>
   </div>
   
@@ -332,6 +333,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>This page covers more advanced topics related to the use of virtualisation and VSCode with the sds2026 environment. These are all <em>entirely</em> optional steps if you want to get deeper into managing code in ways that are not covered in <em><a href="https://jreades.github.io/fsds/">Foundations</a></em>. So you should only explore these if you are comfortable with what we are <em>already</em> doing and are reasonably knowledgeable about the development ‘stack’ (in which case, why are you taking <em>Foundations</em>?).</p>
+<section id="multiple-virtual-machines" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-virtual-machines">Multiple Virtual Machines</h2>
+<p>It’s possible to have multiple virtual machines with different characteristics set up in Podman. So you might have a ‘regular’ machine for doing basic programing and a ‘High-Performance’ VM which is allowed to use many more cores and more system RAM to do intensive calculations or data processing much more quickly. Howver, if you’d like to do this it can all seem a little clunky because all of Podman’s tools want to connect to the <em>default</em> machine. You can change this in the Podman Desktop, or on Mac/WSL in the Terminal by exporting an environment variable at the start of the session (or adding it to your RC file).</p>
+<p>You can create an environment variable like so:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINER_CONNECTION</span><span class="op">=&lt;</span>name_of_vm<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Where ‘name of vm’ is the <em>other</em> virtual machine.</p>
+</section>
 <section id="bash-script" class="level2">
 <h2 class="anchored" data-anchor-id="bash-script">Bash Script</h2>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -351,9 +359,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>There are so many additional options for configuring Podman and Docker that we <a href="https://github.com/jreades/sds_env/raw/master/docker/docker.sh">created a Bash script</a> to do most of it for you; however, this needs to be paired with a <a href="https://github.com/jreades/sds_env/raw/master/docker/config.sh">configuration file</a> that is kept in the same folder as the <code>docker.sh</code> script.</p>
 <p>So it’s an extra step to getting up and running, but it allows you to easily turn various options on/off by commenting/editing/uncommenting the port number in the <code>config.sh</code> file. <strong>You cannot run this in the Windows <code>Power Shell</code>.</strong></p>
 <p>This simplifies the process to the point of starting Docker with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> docker.sh start</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> docker.sh start</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>And you can cleanly shut down the container using:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> docker.sh stop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> docker.sh stop</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="dask-and-quarto" class="level2">
 <h2 class="anchored" data-anchor-id="dask-and-quarto">Dask and Quarto</h2>
@@ -371,10 +379,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>To run Dask and Quarto you need to ‘open up’ other ports on the Docker image:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> sds2026 <span class="at">--rm</span> <span class="at">-d</span> <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4201:4201 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  docker.io/jreades/sds:2026-amd jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> sds2026 <span class="at">--rm</span> <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4201:4201 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  docker.io/jreades/sds:2026-amd64 jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -386,14 +394,14 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>Remember that on a M-chip Mac the above command changes to:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> sds2026 <span class="at">--rm</span> <span class="at">-d</span> <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4201:4201 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  docker.io/jreades/sds:2026-arm jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--name</span> sds2026 <span class="at">--rm</span> <span class="at">-d</span> <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4201:4201 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  docker.io/jreades/sds:2026-arm64 jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <p>Using the <code>Terminal</code> built into the sds2026 container, you will <em>then</em> need to ensure that the version of Quarto built into the image runs on <em>the same port</em> that you specified when starting up Docker:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview <span class="at">--host</span> 0.0.0.0 <span class="at">--port</span> 4201</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview <span class="at">--host</span> 0.0.0.0 <span class="at">--port</span> 4201</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Notice the everything to do with Quarto is on port <code>4201</code>, but note additionally the <code>--host 0.0.0.0</code> that is required to allow you to view Quarto’s output if you want to serve a web site instead of static content <em>beyond</em> the running container.</p>
 <p>The Dask port is where the Dask task manager will be visible when you are making full use of its multiprocessing features within the container.</p>
 </section>
@@ -429,7 +437,7 @@ Tip
 </div>
 </div>
 <p>The easier (but less tested) way to connect is to download the contents of <code>test-vscode-project</code> <a href="https://github.com/jreades/sds_env/tree/master/test-vscode-project">from GitHub</a>. You should place the three resources in the same directory on your computer where you plan to save your notebooks, data, and other resources (e.g.&nbsp;<code>$HOME/Documents/CASA/fsds/</code>).</p>
-<p>You then tell VSCode to <code>Open Workspace from File</code> and point it to this directory. It should then ask if you want to run the container associated with the project. The first time you do this it may take some time to get started as it <em>still</em> has to pull the image from Docker Hub. You can break this into steps by running <code>docker pull docker.io/jreades/sds:2026-amd</code> (<code>docker pull docker.io/jreades/sds:2026-arm</code> on a Silicon Mac) <em>before</em> dealing with downloading these files and moving them into position.</p>
+<p>You then tell VSCode to <code>Open Workspace from File</code> and point it to this directory. It should then ask if you want to run the container associated with the project. The first time you do this it may take some time to get started as it <em>still</em> has to pull the image from Docker Hub. You can break this into steps by running <code>docker pull docker.io/jreades/sds:2026-amd64</code> (<code>docker pull docker.io/jreades/sds:2026-arm64</code> on a Silicon Mac) <em>before</em> dealing with downloading these files and moving them into position.</p>
 </section>
 <section id="using-attach-to-running-container" class="level3">
 <h3 class="anchored" data-anchor-id="using-attach-to-running-container">Using Attach to Running Container</h3>
@@ -444,15 +452,15 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Remember to change the image name to docker.io/jreades/sds:2026-arm if you are using a M-type Mac.</p>
+<p>Remember to change the image name to docker.io/jreades/sds:2026-arm64 if you are using a M-type Mac.</p>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2026 <span class="dt">\</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4201:4201 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">${HOME}</span><span class="st">/.vscode/containers/sds2026-extensions:/home/jovyan/.vscode-server/extensions"</span> <span class="dt">\</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">${HOME}</span><span class="st">/.vscode/containers/sds2026-insiders:/home/jovyan/.vscode-server-insiders"</span> <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  docker.io/jreades/sds:2026-amd jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-d</span> <span class="at">--name</span> sds2026 <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> 8888:8888 <span class="at">-p</span> 4201:4201 <span class="at">-p</span> 8787:8787 <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">${HOME}</span><span class="st">/.vscode/containers/sds2026-extensions:/home/jovyan/.vscode-server/extensions"</span> <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-v</span> <span class="st">"</span><span class="va">${HOME}</span><span class="st">/.vscode/containers/sds2026-insiders:/home/jovyan/.vscode-server-insiders"</span> <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  docker.io/jreades/sds:2026-amd64 jupyter lab <span class="at">--LabApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--ServerApp.password</span><span class="op">=</span><span class="st">''</span> <span class="at">--NotebookApp.token</span><span class="op">=</span><span class="st">''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="required-extensions" class="level4">
 <h4 class="anchored" data-anchor-id="required-extensions">Required Extensions</h4>
 <p>This then enables you to install the required integration extensions as follows:</p>
@@ -502,7 +510,7 @@ Tip
 <figcaption>Attach to a running container</figcaption>
 </figure>
 </div>
-<p>In this screenshot we’re running one container named <code>fsds</code> that was built from the <code>jreades/sds:2022</code> image. Your container may have a different name (e.g.&nbsp;<code>sds2026</code>) but the <em>image</em> should be named <code>docker.io/jreades/sds:2026-amd</code> or <code>docker.io/jreades/sds:2026-arm</code>:</p>
+<p>In this screenshot we’re running one container named <code>fsds</code> that was built from the <code>jreades/sds:2022</code> image. Your container may have a different name (e.g.&nbsp;<code>sds2026</code>) but the <em>image</em> should be named <code>docker.io/jreades/sds:2026-amd64</code> or <code>docker.io/jreades/sds:2026-arm64</code>:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./img/02-container.png" class="nolightbox img-fluid figure-img"></p>
@@ -537,7 +545,7 @@ Tip
 </figure>
 </div>
 <p>So how do we find the notebooks? Well, when we launched the container we had this line:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-v</span> <span class="st">"</span><span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span><span class="st">:/home/jovyan/work"</span> <span class="dt">\</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>That told Docker to connect the <em>current working directory</em> (where you ran the command) to <code>/home/jovyan/work</code> on the container. So anything under <code>/home/jovyan/work</code> is <em>actually</em> a file that can be found on our computer. Below, you can see that I’ve browsed to the <code>fsds/practicals</code> directory on my computer and am now ready to start running (and editing) my notebooks using an IDE instead of JupyterLab’s web interface:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
