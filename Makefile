@@ -64,13 +64,14 @@ clean-stacks:
 # CACHEBUST is set fresh on every build to force reinstalling latest.
 build-agent: check-arch
 	@podman image exists $(IMG_NM) || { echo "Base image $(IMG_NM) not found -- run 'make build ARCH=$(ARCH) TAG=$(TAG)' first."; exit 1; }
-	podman build -t $(AGENT_IMG_NM) \
+	podman build --arch $(ARCH) -t $(AGENT_IMG_NM) \
 		--build-arg base_image=$(IMG_NM) \
 		--build-arg CACHEBUST=$(shell date +%s) \
 		-f ./frontend_agent/Dockerfile \
 		--format docker \
 		./frontend_agent
-	@echo "Built $(AGENT_IMG_NM). Run 'make install-gdsa' once, then 'gdsa help'."
+	podman tag $(AGENT_IMG_NM) jreades/sds-agent:latest
+	@echo "Built $(AGENT_IMG_NM) (also tagged jreades/sds-agent:latest, gdsa's default). Run 'make install-gdsa' once, then 'gdsa help'."
 
 # Symlinks utils/gdsa onto PATH (default ~/.local/bin/gdsa, override with
 # GDSA_BIN) and seeds ~/.config/opencode with the baked defaults if missing.

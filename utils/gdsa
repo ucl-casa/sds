@@ -25,9 +25,12 @@
 #                  pointed at an untrusted repo has no push-capable secrets to
 #                  leak unless you ask for them. Pass it when you want the
 #                  agent to push, open PRs, or use gh.
-#                  ~/.gitconfig is always mounted -- it is identity, not a
-#                  credential. `gdsa shell` always gets the full set, since
-#                  you are the one at the keyboard.
+#                  A sanitized copy of ~/.gitconfig (name/email only) is
+#                  always mounted, not the raw file -- the raw file can
+#                  carry credential.helper, url.<>.insteadOf rewrites, or
+#                  http.extraHeader, none of which are safe to hand an
+#                  agent running with permission checks disabled just to
+#                  get its author identity right.
 #
 # Env overrides:
 #   GDSA_RUNTIME   Container CLI to use: docker or podman (default: podman)
@@ -93,6 +96,26 @@ _die()  { echo "${C_RED}gdsa: error:${C_RESET} $*" >&2; exit 1; }
 _warn() { echo "${C_YELLOW}gdsa: heads up:${C_RESET} $*" >&2; }
 _hint() { echo "${C_DIM}         $*${C_RESET}" >&2; }
 
+# Central cleanup: temp files (e.g. the sanitized gitconfig) and background
+# PIDs (e.g. opencode's keep-alive loop) register themselves here instead of
+# each subcommand managing its own trap, so nothing is skipped regardless of
+# which subcommand runs or how it exits. None of the subcommands below use
+# `exec` for exactly this reason -- exec replaces the process image without
+# running EXIT traps, which would silently skip this cleanup.
+CLEANUP_FILES=()
+CLEANUP_PIDS=()
+_cleanup() {
+  local f pid
+  for f in ${CLEANUP_FILES[@]+"${CLEANUP_FILES[@]}"}; do
+    rm -f "$f" 2>/dev/null || true
+  done
+  for pid in ${CLEANUP_PIDS[@]+"${CLEANUP_PIDS[@]}"}; do
+    kill "$pid" 2>/dev/null || true
+    wait "$pid" 2>/dev/null || true
+  done
+}
+trap _cleanup EXIT INT TERM
+
 _usage() {
   # Print the header comment block: line 2 through the first non-comment line.
   awk 'NR>1 && /^#/ { sub(/^# ?/, ""); print; next } NR>1 { exit }' "$0"
@@ -116,11 +139,33 @@ _env_if_set() {
   fi
 }
 
-# Mount the always-on set: gitconfig + ssh, read-only.
+# Writes a throwaway ~/.gitconfig containing only [user] name/email
+# (identity, so commits made in the container carry the right author) and
+# registers it for cleanup. The real ~/.gitconfig is not mounted: it can
+# carry credential.helper, url.<>.insteadOf rewrites, or http.extraHeader,
+# any of which would hand an agent running with permission checks disabled
+# something it could use to push or authenticate, not just an author name.
+_sanitized_gitconfig() {
+  local name email tmp
+  name=$(git config --global --get user.name 2>/dev/null || true)
+  email=$(git config --global --get user.email 2>/dev/null || true)
+  [ -z "$name" ] && [ -z "$email" ] && return 0
+  tmp=$(mktemp)
+  {
+    echo "[user]"
+    [ -n "$name" ]  && printf '\tname = %s\n' "$name"
+    [ -n "$email" ] && printf '\temail = %s\n' "$email"
+  } > "$tmp"
+  CLEANUP_FILES+=("$tmp")
+  echo "$tmp"
+}
+
+# Mount the always-on set: sanitized gitconfig + ssh, read-only.
 _mount_common() {
-  # .gitconfig is identity, not a credential -- always mounted, so commits
-  # made in the container carry the right author.
-  _mount_if_exists "$HOME/.gitconfig" "${CONTAINER_HOME}/.gitconfig" ro
+  local sanitized
+  sanitized=$(_sanitized_gitconfig)
+  [ -n "$sanitized" ] && \
+    MOUNTS+=(-v "${sanitized}:${CONTAINER_HOME}/.gitconfig:ro")
   # SSH keys are a credential: opt-in for agents, always on for `gdsa shell`,
   # which sets WITH_GIT_CREDS itself.
   [ "$WITH_GIT_CREDS" = "1" ] && \
@@ -239,6 +284,59 @@ _resolve_host() {
   return 1
 }
 
+ADD_HOSTS=()
+_ADDED_HOST_ALIASES=()
+_add_host_dedup() {
+  local alias="$1" target="$2" a
+  for a in ${_ADDED_HOST_ALIASES[@]+"${_ADDED_HOST_ALIASES[@]}"}; do
+    [ "$a" = "$alias" ] && return 0
+  done
+  ADD_HOSTS+=(--add-host "${alias}:${target}")
+  _ADDED_HOST_ALIASES+=("$alias")
+}
+
+# Resolves a bare "host:port" endpoint (as used for OLLAMA_HOST/OPENAI_HOST)
+# for use inside the container: prints the host:port value the container
+# should actually be given (stdout), and appends the matching --add-host
+# entry to ADD_HOSTS as a side effect.
+#
+# localhost/127.0.0.1 is a special case: inside the container that address
+# means the container itself, not the host that started it, so a resolved
+# 127.0.0.1 would silently point opencode at nothing. Route those through
+# the container runtime's host-gateway alias instead (host.docker.internal
+# for docker, host.containers.internal for podman -- podman auto-injects
+# this for rootless containers on some versions, but the explicit
+# --add-host ...:host-gateway entry below is added regardless so this
+# works the same across podman versions/network backends).
+#
+# A real hostname (including Tailscale MagicDNS names) is still resolved
+# to a literal IP and pinned via --add-host, unchanged from before.
+_resolve_endpoint() {
+  local hostport="$1"
+  local stripped hostname port
+  stripped=$(echo "$hostport" | sed -E 's|^https?://||; s|/$||')
+  hostname="${stripped%%:*}"
+  port="${stripped#*:}"
+
+  if [ "$hostname" = "localhost" ] || [[ "$hostname" =~ ^127(\.[0-9]{1,3}){3}$ ]]; then
+    local alias
+    case "$RUNTIME" in
+      docker) alias="host.docker.internal" ;;
+      *)      alias="host.containers.internal" ;;
+    esac
+    echo "gdsa: ${hostname} is loopback -- routing into the container via ${alias} (host-gateway)" >&2
+    _add_host_dedup "$alias" "host-gateway"
+    echo "${alias}:${port}"
+    return 0
+  fi
+
+  local ip
+  ip=$(_resolve_host "$hostname") || return 1
+  echo "gdsa: resolved $hostname -> $ip" >&2
+  _add_host_dedup "$hostname" "$ip"
+  echo "$hostport"
+}
+
 #--- Subcommands --------------------------------------------------------------
 
 _cmd_claude() {
@@ -263,7 +361,7 @@ _cmd_claude() {
 
   _env_if_set ANTHROPIC_API_KEY
 
-  exec "$RUNTIME" run --rm -it \
+  "$RUNTIME" run --rm -it \
     -v "${path}:${WORKDIR}" \
     -w "${WORKDIR}" \
     ${MOUNTS[@]+"${MOUNTS[@]}"} \
@@ -288,7 +386,7 @@ _cmd_copilot() {
     ENVS+=(-e "$v")
   done
 
-  exec "$RUNTIME" run --rm -it \
+  "$RUNTIME" run --rm -it \
     -v "${path}:${WORKDIR}" \
     -w "${WORKDIR}" \
     ${MOUNTS[@]+"${MOUNTS[@]}"} \
@@ -306,41 +404,32 @@ _cmd_opencode() {
   _preflight_opencode
 
   # Resolve Ollama endpoint: env wins, else provider-url.txt next to script.
+  # Resolve OpenAI-compatible endpoint the same way, independently -- may be
+  # a different machine, or entirely absent; unlike Ollama it's normal for
+  # this to be unset. At least one of the two must resolve.
   local ollama_host="${OLLAMA_HOST:-}"
-  if [ -z "$ollama_host" ]; then
-    local url_file="${SCRIPT_DIR}/provider-url.txt"
-    if [ -f "$url_file" ]; then
-      ollama_host=$(cat "$url_file")
-    else
-      _die "no OLLAMA_HOST set and ${url_file} not found. Set OLLAMA_HOST or drop a provider-url.txt next to gdsa."
-    fi
+  if [ -z "$ollama_host" ] && [ -f "${SCRIPT_DIR}/provider-url.txt" ]; then
+    ollama_host=$(cat "${SCRIPT_DIR}/provider-url.txt")
   fi
-
-  local hostname
-  hostname=$(echo "$ollama_host" | sed -E 's|^https?://||' | cut -d':' -f1 | cut -d'/' -f1)
-  local resolved_ip
-  resolved_ip=$(_resolve_host "$hostname") || \
-    _die "could not resolve $hostname — check DNS / VPN"
-  echo "gdsa: resolved $hostname -> $resolved_ip"
-
-  # Resolve optional OpenAI-compatible endpoint: env wins, else
-  # openai-provider-url.txt next to script. Independent of OLLAMA_HOST —
-  # may be a different machine — so it's skipped entirely (not an error)
-  # if neither is set.
   local openai_host="${OPENAI_HOST:-}"
-  if [ -z "$openai_host" ]; then
-    local openai_url_file="${SCRIPT_DIR}/openai-provider-url.txt"
-    [ -f "$openai_url_file" ] && openai_host=$(cat "$openai_url_file")
+  if [ -z "$openai_host" ] && [ -f "${SCRIPT_DIR}/openai-provider-url.txt" ]; then
+    openai_host=$(cat "${SCRIPT_DIR}/openai-provider-url.txt")
   fi
-  local openai_hostname="" openai_add_host=()
+  if [ -z "$ollama_host" ] && [ -z "$openai_host" ]; then
+    _die "no OLLAMA_HOST or OPENAI_HOST set (and no provider-url.txt/openai-provider-url.txt next to gdsa). Set at least one."
+  fi
+
+  # _resolve_endpoint prints the host:port value to actually hand the
+  # container (rewritten for loopback, see its definition) and appends the
+  # matching --add-host entry to ADD_HOSTS as a side effect.
+  local ollama_host_in_container="" openai_host_in_container=""
+  if [ -n "$ollama_host" ]; then
+    ollama_host_in_container=$(_resolve_endpoint "$ollama_host") || \
+      _die "could not resolve the host in OLLAMA_HOST=$ollama_host — check DNS / VPN"
+  fi
   if [ -n "$openai_host" ]; then
-    openai_hostname=$(echo "$openai_host" | sed -E 's|^https?://||' | cut -d':' -f1 | cut -d'/' -f1)
-    local openai_resolved_ip
-    openai_resolved_ip=$(_resolve_host "$openai_hostname") || \
-      _die "could not resolve $openai_hostname — check DNS / VPN"
-    echo "gdsa: resolved $openai_hostname -> $openai_resolved_ip"
-    [ "$openai_hostname" != "$hostname" ] && \
-      openai_add_host=(--add-host "${openai_hostname}:${openai_resolved_ip}")
+    openai_host_in_container=$(_resolve_endpoint "$openai_host") || \
+      _die "could not resolve the host in OPENAI_HOST=$openai_host — check DNS / VPN"
   fi
 
   _mount_common
@@ -349,8 +438,8 @@ _cmd_opencode() {
   _mount_if_exists "$HOME/.config/opencode/tui.json"                   "${CONTAINER_HOME}/.config/opencode/tui.json"       rw
   _mount_git_creds
 
-  ENVS+=(-e "OLLAMA_HOST=${ollama_host}")
-  [ -n "$openai_host" ] && ENVS+=(-e "OPENAI_HOST=${openai_host}")
+  [ -n "$ollama_host_in_container" ] && ENVS+=(-e "OLLAMA_HOST=${ollama_host_in_container}")
+  [ -n "$openai_host_in_container" ] && ENVS+=(-e "OPENAI_HOST=${openai_host_in_container}")
   ENVS+=(-e "GLAMOUR_STYLE=dark")
 
   # Pass opencode config as content env var — reliable fallback when the file
@@ -363,33 +452,36 @@ _cmd_opencode() {
     ENVS+=(-e "OPENCODE_CONFIG_CONTENT")
   fi
 
-  # Keep-alive: re-read the active model and ping Ollama every 4 min so the
-  # model stays warm. Trap-cleaned on exit.
-  local ollama_base
-  ollama_base="${ollama_host%/v1}"
-  local state_file="$HOME/.local/share/opencode/model.json"
+  # Keep-alive (Ollama only): re-read the active model and ping Ollama every
+  # 4 min so the model stays warm. Runs as a host-side background loop, so
+  # it uses the original (unrewritten) $ollama_host -- it's hitting Ollama
+  # directly from the host, not from inside the container. Registered with
+  # the script-wide cleanup trap instead of setting its own.
+  if [ -n "$ollama_host" ]; then
+    local ollama_base state_file
+    ollama_base="${ollama_host%/v1}"
+    state_file="$HOME/.local/share/opencode/model.json"
 
-  _keepalive() {
-    while true; do
-      sleep 240
-      local model=""
-      if [ -f "$state_file" ] && command -v jq >/dev/null 2>&1; then
-        model=$(jq -r '.recent[0].modelID // empty' "$state_file" 2>/dev/null || true)
-      fi
-      if [ -n "$model" ]; then
-        curl -s -o /dev/null -X POST "${ollama_base}/api/generate" \
-          -H "Content-Type: application/json" \
-          -d "{\"model\": \"${model}\", \"keep_alive\": \"5m\"}" || true
-      fi
-    done
-  }
-  _keepalive &
-  local keepalive_pid=$!
-  trap 'kill "$keepalive_pid" 2>/dev/null; wait "$keepalive_pid" 2>/dev/null || true' EXIT INT TERM
+    _keepalive() {
+      while true; do
+        sleep 240
+        local model=""
+        if [ -f "$state_file" ] && command -v jq >/dev/null 2>&1; then
+          model=$(jq -r '.recent[0].modelID // empty' "$state_file" 2>/dev/null || true)
+        fi
+        if [ -n "$model" ]; then
+          curl -s -o /dev/null -X POST "${ollama_base}/api/generate" \
+            -H "Content-Type: application/json" \
+            -d "{\"model\": \"${model}\", \"keep_alive\": \"5m\"}" || true
+        fi
+      done
+    }
+    _keepalive &
+    CLEANUP_PIDS+=("$!")
+  fi
 
   "$RUNTIME" run --rm -it \
-    --add-host "${hostname}:${resolved_ip}" \
-    ${openai_add_host[@]+"${openai_add_host[@]}"} \
+    ${ADD_HOSTS[@]+"${ADD_HOSTS[@]}"} \
     -v "${path}:${WORKDIR}" \
     -w "${WORKDIR}" \
     ${MOUNTS[@]+"${MOUNTS[@]}"} \
@@ -409,7 +501,7 @@ _cmd_shell() {
   WITH_GIT_CREDS=1
   _mount_common
 
-  exec "$RUNTIME" run --rm -it \
+  "$RUNTIME" run --rm -it \
     -v "${path}:${WORKDIR}" \
     -w "${WORKDIR}" \
     ${MOUNTS[@]+"${MOUNTS[@]}"} \
