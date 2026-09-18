@@ -13,4 +13,7 @@ notebooks
 .DS_Store
 .ipynb_checkpoints/
 
+utils/provider-url.txt
+utils/openai-provider-url.txt
+
 **/*.quarto_ipynb
