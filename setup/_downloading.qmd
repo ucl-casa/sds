@@ -8,7 +8,15 @@ Apple has stopped using Intel computer chips and now uses its own 'Silicon' (aka
 
 #### Windows 32- or 64-bit?
 
-It is *highly unlikely* that you have a 32-bit machine, so if in doubt download the 64-bit version. It is also unlikely that you have an ARM device if you have an off-the-shelf Windows computer.
+It is *highly unlikely* that you have a 32-bit machine, so you would normally download the 64-bit version. It is also unlikely that you have an ARM device if you have an off-the-shelf Windows computer.
+
+::: {.callout-important}
+#### If you *have* a 32-bit machine
+
+If it turns out that your machine *is* 32-bit, please let one of us know as we'll have to do some additional work to help you get the most out of the modules.
+
+:::
+
 
 While you're waiting for the packages below to finish downloading, you can also have a look at the information about [getting set up on GitHub](#get-a-github-account)...
 

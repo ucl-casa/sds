@@ -12,5 +12,5 @@ env:
 
 docker:
   base: "jreades/sds:2026"
-  all: "docker.io/jreades/sds:2026-amd"
-  mac: "docker.io/jreades/sds:2026-arm"
+  amd: "docker.io/jreades/sds:2026-amd64"
+  arm: "docker.io/jreades/sds:2026-arm64"

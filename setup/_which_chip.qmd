@@ -8,7 +8,7 @@ Apple has stopped using Intel/AMD computer chips and now uses its own 'Apple Sil
 
 ### Windows 32- or 64-bit?
 
-It is highly unlikely that you have a 32-bit machine, but every year we find one or two older machines that use this architecture. [Microsoft says](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) that you can check which kind of chip you have by doing the following:
+It is **highly unlikely** that you have an older, 32-bit machine, but it is always worth double-checking because we have limited support for 32-bit systems. [Microsoft says](https://support.microsoft.com/en-us/windows/32-bit-and-64-bit-windows-frequently-asked-questions-c6ca9541-8dce-4d48-0415-94a3faa2e13d) that you can check which kind of chip you have by doing the following:
 
 > Select &#8862; `Start` and then select `Settings` > `System` > `About`. Look at the `Device specifications`.
 

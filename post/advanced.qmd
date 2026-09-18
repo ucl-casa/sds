@@ -6,6 +6,18 @@ date: last-modified
 
 This page covers more advanced topics related to the use of virtualisation and VSCode with the {{< var env.name >}} environment. These are all *entirely* optional steps if you want to get deeper into managing code in ways that are not covered in *[Foundations](https://jreades.github.io/fsds/)*. So you should only explore these if you are comfortable with what we are *already* doing and are reasonably knowledgeable about the development 'stack' (in which case, why are you taking *Foundations*?).
 
+## Multiple Virtual Machines
+
+It's possible to have multiple virtual machines with different characteristics set up in Podman. So you might have a 'regular' machine for doing basic programing and a 'High-Performance' VM which is allowed to use many more cores and more system RAM to do intensive calculations or data processing much more quickly. Howver, if you'd like to do this it can all seem a little clunky because all of Podman's tools want to connect to the *default* machine. You can change this in the Podman Desktop, or on Mac/WSL in the Terminal by exporting an environment variable at the start of the session (or adding it to your RC file).
+
+You can create an environment variable like so:
+
+```bash
+export CONTAINER_CONNECTION=<name_of_vm>
+```
+
+Where 'name of vm' is the *other* virtual machine.
+
 ## Bash Script
 
 :::{.callout-warning}
@@ -48,7 +60,7 @@ To run Dask and Quarto you need to 'open up' other ports on the Docker image:
 docker run --name {{< var env.name >}} --rm -d \
   -p 8888:8888 -p 4201:4201 -p 8787:8787 \
   -v "$(pwd):/home/jovyan/work" \
-  {{< var docker.all >}} jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+  {{< var docker.amd >}} jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ::: {.callout-tip}
@@ -59,7 +71,7 @@ Remember that on a M-chip Mac the above command changes to:
 docker run --name {{< var env.name >}} --rm -d \
   -p 8888:8888 -p 4201:4201 -p 8787:8787 \
   -v "$(pwd):/home/jovyan/work" \
-  {{< var docker.mac >}} jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+  {{< var docker.arm >}} jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 :::
@@ -96,7 +108,7 @@ We're investigating why this approach doesn't work, but we're currently unable t
 
 The easier (but less tested) way to connect is to download the contents of `test-vscode-project` [from GitHub](https://github.com/jreades/sds_env/tree/master/test-vscode-project). You should place the three resources in the same directory on your computer where you plan to save your notebooks, data, and other resources (e.g. `$HOME/Documents/CASA/fsds/`). 
 
-You then tell VSCode to `Open Workspace from File` and point it to this directory. It should then ask if you want to run the container associated with the project. The first time you do this it may take some time to get started as it _still_ has to pull the image from Docker Hub. You can break this into steps by running `docker pull {{< var docker.all >}}` (`docker pull {{< var docker.mac >}}` on a Silicon Mac) _before_ dealing with downloading these files and moving them into position.
+You then tell VSCode to `Open Workspace from File` and point it to this directory. It should then ask if you want to run the container associated with the project. The first time you do this it may take some time to get started as it _still_ has to pull the image from Docker Hub. You can break this into steps by running `docker pull {{< var docker.amd >}}` (`docker pull {{< var docker.arm >}}` on a Silicon Mac) _before_ dealing with downloading these files and moving them into position.
 
 ### Using Attach to Running Container
 
@@ -105,7 +117,7 @@ To enable VSCode integration you'll need to create additional 'mount points' ('l
 ::: {.callout-tip}
 # M1...M4 Macs
 
-Remember to change the image name to {{< var docker.mac >}} if you are using a M-type Mac.
+Remember to change the image name to {{< var docker.arm >}} if you are using a M-type Mac.
 
 ::: 
 
@@ -115,7 +127,7 @@ docker run --rm -d --name {{< var env.name >}} \
   -v "$(pwd):/home/jovyan/work" \
   -v "${HOME}/.vscode/containers/{{< var env.name >}}-extensions:/home/jovyan/.vscode-server/extensions" \
   -v "${HOME}/.vscode/containers/{{< var env.name >}}-insiders:/home/jovyan/.vscode-server-insiders" \
-  {{< var docker.all >}} jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+  {{< var docker.amd >}} jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 #### Required Extensions
@@ -155,7 +167,7 @@ Choose the `Attach to Running Container...` option to list active Docker contain
 
 ![Attach to a running container](./img/02-Attach.png){width="75%" fig-alt="Select a running container. Ideally the one you want to use VSCode with!" group="vscode"}
 
-In this screenshot we're running one container named `fsds` that was built from the `jreades/sds:2022` image. Your container may have a different name (e.g. `{{< var env.name >}}`) but the *image* should be named `{{< var docker.all >}}` or `{{< var docker.mac >}}`:
+In this screenshot we're running one container named `fsds` that was built from the `jreades/sds:2022` image. Your container may have a different name (e.g. `{{< var env.name >}}`) but the *image* should be named `{{< var docker.amd >}}` or `{{< var docker.arm >}}`:
 
 ![The list of running containers](./img/02-container.png){.nolightbox}
 
