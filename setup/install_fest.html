@@ -627,12 +627,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>In iTerm2 you will type (hitting Enter after each line):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">CONTAINERS_MACHINE_PROVIDER</span><span class="op">=</span><span class="st">"applehv"</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">podman</span> machine init <span class="at">--memory</span> 4092 <span class="at">--rootful</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">podman</span> machine init <span class="at">--cpus</span> 4 <span class="at">--memory</span> 4096 <span class="at">--rootful</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">podman</span> machine start</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <p>In the Windows Terminal you <em>should</em> be able to simply type (hitting Enter/Return after each line):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">podman</span> machine init <span class="at">--memory</span> 4092 <span class="at">--rootful</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">podman</span> machine init <span class="at">--cpus</span> 4 <span class="at">--memory</span> 4096 <span class="at">--rootful</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">podman</span> machine start</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>If you fail to specify that the machine is <code>rootful</code> then Quarto will not be able to run and you will receive permission errors when trying to render your assessment.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -645,7 +645,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>In a small number of cases on Windows we’ve had error messages about permissions and been unable to <code>start</code> the machine that was created using <code>init</code>. In that case, it seems that you just need to create a new, named virtual machine (e.g.&nbsp;<code>podman machine init myvm</code>) and then change the default machine.</p>
+<p>In a small number of cases on Windows we’ve had error messages about permissions and been unable to <code>start</code> the machine that was created using <code>init</code>. In that case, it seems that you just need to create a new, named virtual machine (e.g.&nbsp;<code>podman machine init --cpus 4 --memory 4096 --rootful myvm</code>) and then change the default machine.</p>
 </div>
 </div>
 </div>
