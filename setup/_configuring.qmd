@@ -18,7 +18,7 @@ In iTerm2 you will type (hitting Enter after each line):
 
 ```bash
 export CONTAINERS_MACHINE_PROVIDER="applehv"
-podman machine init --memory 4092 --rootful
+podman machine init --cpus 4 --memory 4096 --rootful
 podman machine start
 ```
 
@@ -26,7 +26,7 @@ podman machine start
 
 In the Windows Terminal you *should* be able to simply type (hitting Enter/Return after each line):
 ```bash
-podman machine init --memory 4092 --rootful
+podman machine init --cpus 4 --memory 4096 --rootful
 podman machine start
 ```
 
@@ -35,7 +35,7 @@ If you fail to specify that the machine is `rootful` then Quarto will not be abl
 ::: {.callout-warning}
 ### Unable to Run
 
-In a small number of cases on Windows we've had error messages about permissions and been unable to `start` the machine that was created using `init`. In that case, it seems that you just need to create a new, named virtual machine (e.g. `podman machine init myvm`) and then change the default machine.
+In a small number of cases on Windows we've had error messages about permissions and been unable to `start` the machine that was created using `init`. In that case, it seems that you just need to create a new, named virtual machine (e.g. `podman machine init --cpus 4 --memory 4096 --rootful myvm`) and then change the default machine.
 
 :::
 
