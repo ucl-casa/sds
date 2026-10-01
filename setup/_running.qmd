@@ -11,7 +11,7 @@ You can use a single command to download and start the `{{< var env.name >}}` **
 podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
    -v "$(pwd):/home/jovyan/work" \
   {{< var docker.amd >}} start.sh jupyter lab \
-  --NotebookApp.notebook_dir='/home/jovyan/work \
+  --NotebookApp.notebook_dir='/home/jovyan/work' \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
@@ -21,14 +21,14 @@ podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
 podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
    -v "$(pwd):/home/jovyan/work" \
   {{< var docker.arm >}} start.sh jupyter lab \
-  --NotebookApp.notebook_dir='/home/jovyan/work \
+  --NotebookApp.notebook_dir='/home/jovyan/work' \
   --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ## Windows (Intel/AMD64)
 
 ```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 -v "$(pwd):/home/jovyan/work" {{< var docker.amd >}} start.sh jupyter lab --NotebookApp.notebook_dir='/home/jovyan/work --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 -v "$(pwd):/home/jovyan/work" {{< var docker.amd >}} start.sh jupyter lab --NotebookApp.notebook_dir='/home/jovyan/work' --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ## Windows (ARM64)

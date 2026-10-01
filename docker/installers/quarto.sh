@@ -4,9 +4,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=./_lib.sh
 . "$SCRIPT_DIR/_lib.sh"
 
-ARCH="${1:?Usage: quarto.sh <TARGETARCH>}"
+ARCH="${1:-}"
+if [[ -z "$ARCH" ]]; then
+    ARCH="$(uname -m)"
+fi
 
-if [[ "$ARCH" == "arm64" ]]; then
+if [[ "$ARCH" == "arm64" || "$ARCH" == "aarch64" ]]; then
     QUARTO_DEB="quarto-linux-arm64.deb"
 else
     QUARTO_DEB="quarto-linux-amd64.deb"

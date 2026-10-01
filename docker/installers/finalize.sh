@@ -16,7 +16,10 @@ rm -rf "/home/${NB_USER}/.cache/pip"
 
 luaotfload-tool -v -vvv -u
 
-perl -i -p -e 's|from scipy import inf|from numpy import inf|' \
-    "${CONDA_DIR}/lib/python3.13/site-packages/libpysal/cg/kdtree.py"
+for kdtree in "${CONDA_DIR}"/lib/python*/site-packages/libpysal/cg/kdtree.py; do
+    if [ -f "$kdtree" ]; then
+        perl -i -p -e 's|from scipy import inf|from numpy import inf|' "$kdtree"
+    fi
+done
 
 rm -rf /tmp/installers

@@ -4,22 +4,26 @@
 #   make build ARCH=arm64 TAG=2026
 #   make build ARCH=amd64 TAG=2026
 #   make test  ARCH=arm64 TAG=2026
-#   make snapshot ARCH=arm64 TAG=2026   # updates the committed stack file
+#   make snapshot ARCH=arm64 TAG=2026      # updates the committed stack file
+#   make manifest TAG=2026                 # creates multi-arch manifest
+#   make push ARCH=arm64 TAG=2026          # push single arch image
+#   make push-manifest TAG=2026            # push multi-arch manifest
 #   make build-agent ARCH=arm64 TAG=2026   # optional Claude Code/opencode/Copilot layer
-#   make install-gdsa                       # symlink the gdsa launcher onto PATH
+#   make install-gdsa                      # symlink the gdsa launcher onto PATH
 #
 # ARCH must be one of: arm64, amd64
 # TAG defaults to the current year.
 
-ARCH       ?= arm64
-TAG        ?= $(shell date +%Y)
-IMG_NM     ?= jreades/sds:$(TAG)-$(ARCH)
+ARCH         ?= arm64
+TAG          ?= $(shell date +%Y)
+BASE_IMG     ?= jreades/sds:$(TAG)
+IMG_NM       ?= $(BASE_IMG)-$(ARCH)
 AGENT_IMG_NM ?= jreades/sds-agent:$(TAG)-$(ARCH)
-GDSA_BIN   ?= $(HOME)/.local/bin/gdsa
-STACK_DIR  := docker/stacks
-STACK_FILE := $(STACK_DIR)/conda-explicit-$(ARCH).txt
+GDSA_BIN     ?= $(HOME)/.local/bin/gdsa
+STACK_DIR    := docker/stacks
+STACK_FILE   := $(STACK_DIR)/conda-explicit-$(ARCH).txt
 
-.PHONY: build test snapshot clean-stacks check-arch build-agent install-gdsa
+.PHONY: build test snapshot clean-stacks check-arch build-agent install-gdsa manifest push push-manifest
 
 check-arch:
 	@case "$(ARCH)" in \
@@ -28,7 +32,21 @@ check-arch:
 	esac
 
 build: check-arch
-	podman build --arch $(ARCH) -t $(IMG_NM) --compress -f ./docker/Podman.master --format docker .
+	podman build --arch $(ARCH) --build-arg TARGETARCH=$(ARCH) -t $(IMG_NM) --compress -f ./docker/Podman.master --format docker .
+
+push: check-arch
+	podman push $(IMG_NM) docker://docker.io/$(IMG_NM)
+
+manifest:
+	@echo "Creating multi-arch manifest $(BASE_IMG)..."
+	-podman manifest rm $(BASE_IMG) 2>/dev/null || true
+	podman manifest create $(BASE_IMG)
+	podman manifest add $(BASE_IMG) docker://docker.io/$(BASE_IMG)-arm64
+	podman manifest add $(BASE_IMG) docker://docker.io/$(BASE_IMG)-amd64
+	@echo "Created manifest $(BASE_IMG). Run 'make push-manifest TAG=$(TAG)' to publish."
+
+push-manifest:
+	podman manifest push $(BASE_IMG) docker://docker.io/$(BASE_IMG)
 
 # Depends on build so the image under test always matches the current
 # source and this invocation's ARCH/TAG -- otherwise a stale or
