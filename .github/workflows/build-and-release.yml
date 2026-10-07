@@ -105,14 +105,14 @@ jobs:
           podman push "${{ steps.vars.outputs.ghcr_img }}"
 
       - name: Log in to Docker Hub
-        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        if: inputs.push_dockerhub == true
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push AMD64 to Docker Hub
-        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        if: inputs.push_dockerhub == true
         run: |
           podman push "${{ steps.vars.outputs.dh_img }}"
 
@@ -175,14 +175,14 @@ jobs:
           podman push "${{ steps.vars.outputs.ghcr_img }}"
 
       - name: Log in to Docker Hub
-        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        if: inputs.push_dockerhub == true
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push ARM64 to Docker Hub
-        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        if: inputs.push_dockerhub == true
         run: |
           podman push "${{ steps.vars.outputs.dh_img }}"
 
@@ -210,7 +210,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Docker Hub
-        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        if: inputs.push_dockerhub == true
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -233,7 +233,7 @@ jobs:
           podman manifest push "${{ env.GHCR_REPO }}:latest"
 
       - name: Create and Push Multi-Arch Manifests to Docker Hub
-        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != '' && inputs.arch == 'both'
+        if: inputs.push_dockerhub == true && inputs.arch == 'both'
         run: |
           YEAR="${{ inputs.year }}"
           podman manifest create "${{ env.DOCKERHUB_REPO }}:${YEAR}"
