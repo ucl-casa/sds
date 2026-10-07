@@ -4,9 +4,11 @@ To make *full* use of WSL2 and Linux you will need to familiarise yourself with 
 The behaviour of the 'shell' (command line) is quite confusing because, with WSL2, you effectively end up with two 'home' directories: one for your Windows user, and one for your new Ubuntu user. Starting a Linux shell/command line puts you in your Linux home directory (the username may be completely different from your Windows username). Starting a Windows shell/command line puts you in your Windows home directory (again, the username may be completely different from your Linux username).
 
 ::: {.callout-tip}
+
 ## Creating a Linux User
 
-If you want to install a full Linux distribution (e.g. because you want to do *more* than just run Podman or Docker) then make sure you set up a *new `Linux` user* and do not end up running everything as `root`.
+If you want to install a full Linux distribution (e.g. because you want to do *more* than just run Podman or Docker) then make sure you set up a *new `Linux` user* and do not end up running everything as `root`. **But do not create a username containing numbers!**
+
 :::
 
 So the first, and perhaps most important, thing is [understanding where 'data' is being stored](https://learn.microsoft.com/en-us/windows/wsl/filesystems?source=recommendations):
