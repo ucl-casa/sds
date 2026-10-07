@@ -1,0 +1,282 @@
+name: Build, Test & Release Multi-Arch SDS Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: 'Image tag year (e.g. 2026)'
+        required: true
+        default: '2026'
+      arch:
+        description: 'Architectures to build'
+        required: true
+        type: choice
+        options:
+          - both
+          - amd64
+          - arm64
+        default: 'both'
+      push_packages:
+        description: 'Push images to GitHub Packages (ghcr.io)'
+        required: true
+        type: boolean
+        default: true
+      push_dockerhub:
+        description: 'Push images to Docker Hub (docker.io/jreades/sds)'
+        required: true
+        type: boolean
+        default: false
+      create_release:
+        description: 'Create a GitHub Release with environment lockfiles'
+        required: true
+        type: boolean
+        default: true
+      run_tests:
+        description: 'Run pre-academic-year automated test harness'
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  GHCR_REPO: ghcr.io/${{ github.repository }}
+  DOCKERHUB_REPO: docker.io/jreades/sds
+
+jobs:
+  build-amd64:
+    name: Build & Test AMD64 (Mac Intel, Windows Intel, Linux Intel)
+    if: inputs.arch == 'amd64' || inputs.arch == 'both'
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.vars.outputs.tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure variables
+        id: vars
+        run: |
+          echo "tag=${{ inputs.year }}" >> "$GITHUB_OUTPUT"
+          echo "ghcr_img=${{ env.GHCR_REPO }}:${{ inputs.year }}-amd64" >> "$GITHUB_OUTPUT"
+          echo "dh_img=${{ env.DOCKERHUB_REPO }}:${{ inputs.year }}-amd64" >> "$GITHUB_OUTPUT"
+
+      - name: Build native AMD64 image
+        run: |
+          podman build \
+            --arch amd64 \
+            --build-arg TARGETARCH=amd64 \
+            -t "${{ steps.vars.outputs.ghcr_img }}" \
+            -t "${{ steps.vars.outputs.dh_img }}" \
+            --compress \
+            -f ./docker/Podman.master \
+            --format docker .
+
+      - name: Run Pre-Academic-Year Test Harness
+        if: inputs.run_tests == true
+        run: |
+          chmod +x ./tests/run_tests.sh
+          ./tests/run_tests.sh "${{ steps.vars.outputs.ghcr_img }}"
+
+      - name: Export AMD64 Locked Conda Stack
+        run: |
+          mkdir -p dist
+          podman run --rm "${{ steps.vars.outputs.ghcr_img }}" conda list --explicit > "dist/conda-explicit-amd64-${{ inputs.year }}.txt"
+
+      - name: Upload AMD64 Stack Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda-explicit-amd64-${{ inputs.year }}
+          path: dist/conda-explicit-amd64-${{ inputs.year }}.txt
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        if: inputs.push_packages == true
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push AMD64 to GitHub Packages
+        if: inputs.push_packages == true
+        run: |
+          podman push "${{ steps.vars.outputs.ghcr_img }}"
+
+      - name: Log in to Docker Hub
+        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push AMD64 to Docker Hub
+        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        run: |
+          podman push "${{ steps.vars.outputs.dh_img }}"
+
+  build-arm64:
+    name: Build & Test ARM64 (Mac Silicon, Windows ARM, Linux ARM)
+    if: inputs.arch == 'arm64' || inputs.arch == 'both'
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      image_tag: ${{ steps.vars.outputs.tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure variables
+        id: vars
+        run: |
+          echo "tag=${{ inputs.year }}" >> "$GITHUB_OUTPUT"
+          echo "ghcr_img=${{ env.GHCR_REPO }}:${{ inputs.year }}-arm64" >> "$GITHUB_OUTPUT"
+          echo "dh_img=${{ env.DOCKERHUB_REPO }}:${{ inputs.year }}-arm64" >> "$GITHUB_OUTPUT"
+
+      - name: Build native ARM64 image
+        run: |
+          podman build \
+            --arch arm64 \
+            --build-arg TARGETARCH=arm64 \
+            -t "${{ steps.vars.outputs.ghcr_img }}" \
+            -t "${{ steps.vars.outputs.dh_img }}" \
+            --compress \
+            -f ./docker/Podman.master \
+            --format docker .
+
+      - name: Run Pre-Academic-Year Test Harness
+        if: inputs.run_tests == true
+        run: |
+          chmod +x ./tests/run_tests.sh
+          ./tests/run_tests.sh "${{ steps.vars.outputs.ghcr_img }}"
+
+      - name: Export ARM64 Locked Conda Stack
+        run: |
+          mkdir -p dist
+          podman run --rm "${{ steps.vars.outputs.ghcr_img }}" conda list --explicit > "dist/conda-explicit-arm64-${{ inputs.year }}.txt"
+
+      - name: Upload ARM64 Stack Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda-explicit-arm64-${{ inputs.year }}
+          path: dist/conda-explicit-arm64-${{ inputs.year }}.txt
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        if: inputs.push_packages == true
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push ARM64 to GitHub Packages
+        if: inputs.push_packages == true
+        run: |
+          podman push "${{ steps.vars.outputs.ghcr_img }}"
+
+      - name: Log in to Docker Hub
+        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push ARM64 to Docker Hub
+        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        run: |
+          podman push "${{ steps.vars.outputs.dh_img }}"
+
+  manifest-and-release:
+    name: Create Multi-Arch Manifests & GitHub Release
+    needs: [build-amd64, build-arm64]
+    if: always() && (needs.build-amd64.result == 'success' || needs.build-amd64.result == 'skipped') && (needs.build-arm64.result == 'success' || needs.build-arm64.result == 'skipped')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          merge-multiple: true
+
+      - name: Log in to GitHub Container Registry (GHCR)
+        if: inputs.push_packages == true
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub
+        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create and Push Multi-Arch Manifests to GHCR
+        if: inputs.push_packages == true && inputs.arch == 'both'
+        run: |
+          YEAR="${{ inputs.year }}"
+          # Yearly tag (e.g. ghcr.io/ucl-casa/sds:2026)
+          podman manifest create "${{ env.GHCR_REPO }}:${YEAR}"
+          podman manifest add "${{ env.GHCR_REPO }}:${YEAR}" "docker://${{ env.GHCR_REPO }}:${YEAR}-arm64"
+          podman manifest add "${{ env.GHCR_REPO }}:${YEAR}" "docker://${{ env.GHCR_REPO }}:${YEAR}-amd64"
+          podman manifest push "${{ env.GHCR_REPO }}:${YEAR}"
+
+          # Latest tag (ghcr.io/ucl-casa/sds:latest)
+          podman manifest create "${{ env.GHCR_REPO }}:latest"
+          podman manifest add "${{ env.GHCR_REPO }}:latest" "docker://${{ env.GHCR_REPO }}:${YEAR}-arm64"
+          podman manifest add "${{ env.GHCR_REPO }}:latest" "docker://${{ env.GHCR_REPO }}:${YEAR}-amd64"
+          podman manifest push "${{ env.GHCR_REPO }}:latest"
+
+      - name: Create and Push Multi-Arch Manifests to Docker Hub
+        if: inputs.push_dockerhub == true && secrets.DOCKERHUB_USERNAME != '' && inputs.arch == 'both'
+        run: |
+          YEAR="${{ inputs.year }}"
+          podman manifest create "${{ env.DOCKERHUB_REPO }}:${YEAR}"
+          podman manifest add "${{ env.DOCKERHUB_REPO }}:${YEAR}" "docker://${{ env.DOCKERHUB_REPO }}:${YEAR}-arm64"
+          podman manifest add "${{ env.DOCKERHUB_REPO }}:${YEAR}" "docker://${{ env.DOCKERHUB_REPO }}:${YEAR}-amd64"
+          podman manifest push "${{ env.DOCKERHUB_REPO }}:${YEAR}"
+
+          podman manifest create "${{ env.DOCKERHUB_REPO }}:latest"
+          podman manifest add "${{ env.DOCKERHUB_REPO }}:latest" "docker://${{ env.DOCKERHUB_REPO }}:${YEAR}-arm64"
+          podman manifest add "${{ env.DOCKERHUB_REPO }}:latest" "docker://${{ env.DOCKERHUB_REPO }}:${YEAR}-amd64"
+          podman manifest push "${{ env.DOCKERHUB_REPO }}:latest"
+
+      - name: Publish GitHub Release
+        if: inputs.create_release == true
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.year }}
+          name: Spatial Data Science Environment ${{ inputs.year }}
+          draft: false
+          prerelease: false
+          files: release-artifacts/*
+          body: |
+            ## Spatial Data Science (SDS) Environment ${{ inputs.year }}
+
+            Pre-flight tested and verified container image for Foundations of Spatial Data Science (CASA0013).
+
+            ### 📦 Published Packages (GitHub Packages / GHCR)
+            - **Unified Multi-Architecture Image**: `ghcr.io/${{ github.repository }}:${{ inputs.year }}`
+            - **Native ARM64 Image** (Mac Apple Silicon, Windows ARM, Linux ARM): `ghcr.io/${{ github.repository }}:${{ inputs.year }}-arm64`
+            - **Native AMD64 Image** (Mac Intel, Windows Intel, Linux Intel): `ghcr.io/${{ github.repository }}:${{ inputs.year }}-amd64`
+
+            ### 🚀 Student Quickstart (Podman)
+            Students on all platforms (Mac, Windows, Linux) can run the unified image:
+            ```bash
+            podman run --rm -d --name sds${{ inputs.year }} \
+              -p 8888:8888 -p 4201:4201 \
+              -v "$(pwd):/home/jovyan/work" \
+              ghcr.io/${{ github.repository }}:${{ inputs.year }} start.sh jupyter lab \
+              --NotebookApp.notebook_dir='/home/jovyan/work' \
+              --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+            ```
+
+            *(On Linux or WSL2 with rootless Podman, add `--userns=keep-id` to ensure matching file permissions).*
+
+            ### 📋 Attached Artifacts
+            - Locked Conda stack specifications for reproducible environments across both architectures.

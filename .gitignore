@@ -17,3 +17,7 @@ utils/provider-url.txt
 utils/openai-provider-url.txt
 
 **/*.quarto_ipynb
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/output/

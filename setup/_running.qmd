@@ -34,7 +34,22 @@ podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 -v "$(p
 ## Windows (ARM64)
 
 ```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -v "$(pwd):/home/jovyan/work" {{< var docker.arm >}} start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
+   -v "$(pwd):/home/jovyan/work" \
+  {{< var docker.arm >}} start.sh jupyter lab \
+  --NotebookApp.notebook_dir='/home/jovyan/work' \
+  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
+```
+
+## Linux (Intel or ARM64)
+
+```bash
+podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
+   --userns=keep-id:uid=1000,gid=100 \
+   -v "$(pwd):/home/jovyan/work:z" \
+  {{< var docker.base >}} start.sh jupyter lab \
+  --NotebookApp.notebook_dir='/home/jovyan/work' \
+  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
 ```
 
 ::::

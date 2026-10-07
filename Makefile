@@ -23,7 +23,7 @@ GDSA_BIN     ?= $(HOME)/.local/bin/gdsa
 STACK_DIR    := docker/stacks
 STACK_FILE   := $(STACK_DIR)/conda-explicit-$(ARCH).txt
 
-.PHONY: build test snapshot clean-stacks check-arch build-agent install-gdsa manifest push push-manifest
+.PHONY: build test snapshot clean-stacks check-arch build-agent install-gdsa manifest push push-manifest test-harness
 
 check-arch:
 	@case "$(ARCH)" in \
@@ -64,6 +64,12 @@ test: build
 	trap 'rm -f "$$tmp"' EXIT; \
 	podman run --rm $(IMG_NM) conda list --explicit > "$$tmp"; \
 	diff -u $(STACK_FILE) "$$tmp"
+
+# Runs the comprehensive pre-academic-year verification suite (Python, R,
+# geospatial, data science, Quarto HTML/PDF rendering, LaTeX fonts, and permissions).
+test-harness:
+	@chmod +x ./tests/run_tests.sh
+	./tests/run_tests.sh $(IMG_NM)
 
 # Regenerates the committed snapshot from a freshly built image. Run
 # this deliberately after a build whose package changes are wanted,

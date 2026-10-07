@@ -15,9 +15,8 @@ WORK_DIR="${PWD}"
 # copies at the same time.
 DOCKER_NM="sds"
 # The name of the Docker image to run
-# Will normally have silicon appended
-# automatically if on Apple M1/M2/M3/M4 
-DOCKER_IMG="jreades/sds:2024"
+# Automatically detects architecture tag or uses multi-arch manifest
+DOCKER_IMG="jreades/sds:2026"
 
 # If you want an actual password then you set this using something
 # like the following (see end of file for how to generate a new one):

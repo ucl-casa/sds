@@ -1,0 +1,30 @@
+name: Run SDS Test Harness
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'Container image to test (e.g. ghcr.io/ucl-casa/sds:2026 or jreades/sds:2026-amd64)'
+        required: true
+        default: 'ghcr.io/ucl-casa/sds:2026'
+      runner:
+        description: 'Runner architecture to execute test on'
+        required: true
+        type: choice
+        options:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+        default: 'ubuntu-latest'
+
+jobs:
+  test-image:
+    name: Test SDS Image on ${{ inputs.runner }}
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Test Harness
+        run: |
+          chmod +x ./tests/run_tests.sh
+          ./tests/run_tests.sh "${{ inputs.image }}"

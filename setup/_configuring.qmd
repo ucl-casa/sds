@@ -30,7 +30,7 @@ podman machine init --cpus 4 --memory 4096 --rootful
 podman machine start
 ```
 
-If you fail to specify that the machine is `rootful` then Quarto will not be able to run and you will receive permission errors when trying to render your assessment.
+In previous years, machines required `--rootful` due to Quarto permission conflicts. The 2026 SDS image fixes internal font and cache ownership so containers run cleanly in rootless mode, though `--rootful` remains supported if needed.
 
 ::: {.callout-warning}
 ### Unable to Run
