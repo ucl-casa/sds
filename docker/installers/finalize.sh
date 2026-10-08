@@ -14,8 +14,6 @@ rm -rf "/home/${NB_USER}/.cache/rosetta"
 rm -rf "/home/${NB_USER}/.cache/yarn"
 rm -rf "/home/${NB_USER}/.cache/pip"
 
-luaotfload-tool -v -vvv -u
-
 perl -i -p -e 's|from scipy import inf|from numpy import inf|' \
     "${CONDA_DIR}/lib/python3.13/site-packages/libpysal/cg/kdtree.py"
 

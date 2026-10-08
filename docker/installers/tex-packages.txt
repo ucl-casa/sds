@@ -1,0 +1,23 @@
+# LaTeX packages pre-installed into TinyTeX by tinytex.sh.
+# Anything missing is still installed on demand at render time, but
+# that needs network access and adds minutes to the first render.
+# See docker/README.md for how to regenerate this list.
+
+# lualatex + custom mainfont
+luatexbase
+lualatex-math
+unicode-math
+selnolig
+
+# Quarto callouts / code blocks
+tcolorbox
+pdfcol
+tikzfill
+environ
+trimspaces
+framed
+fvextra
+
+# Used in course templates
+fontawesome5
+koma-script

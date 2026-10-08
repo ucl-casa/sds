@@ -16,6 +16,8 @@ curl -LO "https://quarto.org/download/latest/${QUARTO_DEB}"
 gdebi --non-interactive "${QUARTO_DEB}"
 rm "${QUARTO_DEB}"
 
-quarto update tool tinytex --no-prompt
+# TinyTeX is installed separately by tinytex.sh as $NB_UID: running it
+# here (as root, with HOME=/home/jovyan) leaves ~/.TinyTeX root-owned
+# and tlmgr unable to install missing packages at render time.
 
 apt_cleanup

@@ -1,7 +1,7 @@
 #--- Build from Jupyter-provided Minimal Install ---#
-#  export IMG_NM=sds:2025-arm && podman build --arch arm64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
-#  export IMG_NM=sds:2025-amd && podman build --arch amd64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
-#  podman push <IMAGE ID> docker://docker.io/jreades/sds:2025-<ARCH>
+#  export IMG_NM=sds:2026-arm64 && podman build --arch arm64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
+#  export IMG_NM=sds:2026-amd64 && podman build --arch amd64 -t jreades/$IMG_NM --compress  -f ./docker/Podman.master --format docker .
+#  podman push <IMAGE ID> docker://docker.io/jreades/sds:2026-<ARCH>
 #
 # Or: make build ARCH=arm64
 #
@@ -27,9 +27,10 @@ RUN mkdir -p /home/${NB_USER}/.cache/conda
 # Each script under docker/installers/ is self-contained and cleans
 # up after itself in the same RUN it runs in (see installers/_lib.sh
 # for why that matters). Copied once here so later steps don't repeat
-# the COPY.
+# the COPY. Owned by $NB_UID so finalize.sh can delete them without
+# root (/tmp is sticky, so root-owned files there are undeletable).
 USER root
-COPY ./docker/installers/ /tmp/installers/
+COPY --chown=${NB_UID}:${NB_GID} ./docker/installers/ /tmp/installers/
 RUN chmod +x /tmp/installers/*.sh
 
 #--- Base ---#
@@ -47,7 +48,7 @@ USER $NB_UID
 ENV env_nm 'base'
 ENV env_path '/opt/conda/'
 
-ADD ../conda/$yaml_nm ./
+ADD --chown=${NB_UID}:${NB_GID} ../conda/$yaml_nm ./
 
 RUN /tmp/installers/conda-env.sh
 
@@ -78,11 +79,21 @@ RUN /tmp/installers/conda-env.sh
 #####################
 USER $NB_UID
 
+# TinyTeX must be installed as the notebook user (see tinytex.sh).
+# Both arch bin dirs are listed; only the one that exists is used.
+ENV PATH="/home/${NB_USER}/.TinyTeX/bin/x86_64-linux:/home/${NB_USER}/.TinyTeX/bin/aarch64-linux:${PATH}"
+ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
+RUN /tmp/installers/tinytex.sh
+
 ENV FONTCONF="/home/${NB_USER}/.config/fontconfig/conf.d"
 ENV FONTPATH="/home/${NB_USER}/.fonts"
 
-COPY ./fonts/conf ${FONTCONF}
-COPY ./fonts/install ${FONTPATH}
+# COPY creates missing parent dirs (e.g. ~/.config) as root regardless
+# of USER, which then blocks matplotlib, Quarto, etc. from writing to
+# them. Create them as the user first, and chown what's copied.
+RUN mkdir -p ${FONTCONF} ${FONTPATH}
+COPY --chown=${NB_UID}:${NB_GID} ./fonts/conf ${FONTCONF}
+COPY --chown=${NB_UID}:${NB_GID} ./fonts/install ${FONTPATH}
 
 RUN /tmp/installers/fonts.sh
 
@@ -92,9 +103,10 @@ RUN /tmp/installers/fonts.sh
 RUN /tmp/installers/python-preload.sh
 
 
-#--- Tidy and fix permissions ---#
-USER root
-
+#--- Tidy ---#
+# Runs as $NB_UID: nothing here needs root ($CONDA_DIR and $HOME are
+# user-owned), and running it as root left root-owned files behind in
+# both (conda/jupyter state, the patched libpysal file).
 # Disable message, clean caches, fix known-bad libpysal import.
 # finalize.sh also removes /tmp/installers once it's done with it.
 RUN /tmp/installers/finalize.sh

@@ -26,3 +26,16 @@ Multi-platform images can *only* be sent to the registry. However, a single-plat
 ```shell
 export IMG_NM=sds:2022i && docker buildx build --tag jreades/${IMG_NM} --output=type=docker --platform=linux/amd64 --compress --file docker/Dockerfile.master .
 ```
+
+## LaTeX packages for PDF output
+
+TinyTeX is installed as `jovyan` (`installers/tinytex.sh`), so any LaTeX package missing at render time is installed automatically by Quarto. To bake those packages into the image instead, render representative documents in a running container and then compare against the package list:
+
+```bash
+# Inside the container, after rendering a representative set of PDFs:
+tlmgr info --list --only-installed --data name | sort > after.txt
+# Compare with a fresh container (run the same command before any render, save as before.txt):
+comm -13 before.txt after.txt
+```
+
+Add the names that appear to `installers/tex-packages.txt` and rebuild.

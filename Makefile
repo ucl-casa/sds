@@ -4,6 +4,7 @@
 #   make build ARCH=arm64 TAG=2026
 #   make build ARCH=amd64 TAG=2026
 #   make test  ARCH=arm64 TAG=2026
+#   make check ARCH=arm64 TAG=2026      # file ownership + TinyTeX sanity
 #   make snapshot ARCH=arm64 TAG=2026   # updates the committed stack file
 #   make build-agent ARCH=arm64 TAG=2026   # optional Claude Code/opencode/Copilot layer
 #   make install-gdsa                       # symlink the gdsa launcher onto PATH
@@ -19,7 +20,7 @@ GDSA_BIN   ?= $(HOME)/.local/bin/gdsa
 STACK_DIR  := docker/stacks
 STACK_FILE := $(STACK_DIR)/conda-explicit-$(ARCH).txt
 
-.PHONY: build test snapshot clean-stacks check-arch build-agent install-gdsa
+.PHONY: build test check snapshot clean-stacks check-arch build-agent install-gdsa
 
 check-arch:
 	@case "$(ARCH)" in \
@@ -46,6 +47,23 @@ test: build
 	trap 'rm -f "$$tmp"' EXIT; \
 	podman run --rm $(IMG_NM) conda list --explicit > "$$tmp"; \
 	diff -u $(STACK_FILE) "$$tmp"
+
+# Depends on build for the same reason as `test`.
+#
+# Fails if anything under $HOME or $CONDA_DIR isn't owned by jovyan.
+# Root-owned files there (from a RUN under USER root, or a COPY/ADD
+# without --chown) build fine but break Quarto/tlmgr/matplotlib at run
+# time. Also checks the TeX tools resolve to the user's TinyTeX rather
+# than a system TeX Live.
+check: build
+	@podman run --rm $(IMG_NM) bash -c '\
+		bad=$$(find /home/jovyan /opt/conda -xdev -not -user jovyan); \
+		if [ -n "$$bad" ]; then echo "Not owned by jovyan:"; echo "$$bad" | head -50; exit 1; fi; \
+		for t in tlmgr lualatex luaotfload-tool; do \
+			p=$$(command -v $$t) || { echo "$$t not on PATH"; exit 1; }; \
+			case "$$p" in /home/jovyan/.TinyTeX/*) ;; *) echo "$$t resolves to $$p, not TinyTeX"; exit 1 ;; esac; \
+		done; \
+		echo "Ownership and TinyTeX checks passed."'
 
 # Regenerates the committed snapshot from a freshly built image. Run
 # this deliberately after a build whose package changes are wanted,
