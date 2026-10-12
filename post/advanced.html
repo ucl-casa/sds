@@ -123,12 +123,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <meta property="og:title" content="Advanced Topics – CASA Computing Platform">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://ucl-casa.github.io/sds/post/img/01-icon.png">
+<meta property="og:image" content="./img/01-icon.png">
 <meta property="og:site_name" content="CASA Computing Platform">
 <meta property="og:locale" content="en_GB">
 <meta property="og:image:alt" content="Dev Containers icon">
-<meta property="og:image:height" content="19">
-<meta property="og:image:width" content="32">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -660,7 +658,7 @@ Tip
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/ucl-casa\.github\.io\/sds\/");
+        var filterRegex = new RegExp('/' + window.location.host + '/');
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
