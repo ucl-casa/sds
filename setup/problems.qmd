@@ -19,28 +19,75 @@ The only problem that is common to both Windows and macOS machines is the 'unsup
 
 If you are not able to update your computer's operating system to a more recent release, then your only option is to use an older version of the application. You can find [older versions of [Podman]() and Docker](https://docs.docker.com/desktop/release-notes/) to install, though for very old machines this may *still* not resolve the 'unsupported version' problem.
 
-### Problems with WSL2
+## Problems with WSL2
+
+::: {.callout-alert}
+
+### Windows Only
+
+:::
 
 On Windows, if you have problems that mention WSL/WSL2 (this could be errors installing or updating this system) and you are sure that you've installed and updated WSL, then you *may* need to try using 'Hyper-V' instead. This is a 'second-best' workaround that has worked for some people.
 
-#### Enabling Hyper-V
+### Enabling Hyper-V
+
+::: {.callout-alert}
+
+### Windows Only
+
+:::
 
 Microsoft [has instructions here](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v) on how to enable Hyper-V on your Windows machine. You will need to restart your computer after enabling Hyper-V. [These instructions](https://techcommunity.microsoft.com/t5/educator-developer-blog/step-by-step-enabling-hyper-v-for-use-on-windows-11/ba-p/3745905) may also help.
 
 You will then need to look at the Podman or Docker settings and change the `Use the WSL2 based engine` to `Use the Hyper-V based engine`.
 
+## Errors Initialising the Machine
+
+::: {.callout-alert}
+
+### Mac Only
+
+:::
+
+Slightly confusing, there are two steps to running a Podman container: the first is creating a 'machine' on which to run containers; the second is pulling an 'image' to run *on* the machine.
+
+Here it's Macs that have the issue: if your machine gets stuck on starting up then you most likely have the same issue that I do and it's because the 'newer' virtualisation framework doesn't run.
+
+I have a long-standing query in with Podman about why the 'modern' `libkrun` library doesn't work on *some* Macs and they've never been able to resolve it. So I *still* have to force Podman to use an older Apply Hypervisor virtualisation library. 
+
+The easiest way to resolve this is to create a configuration file *before* you initialise the machine. This should work on a Mac (copy+paste the entire block in one go):
+
+```bash
+cat << EOF > ~/.config/containers/containers.conf
+[containers]
+
+[engine]
+env = []
+
+[machine]
+#provider = "libkrun" # disabled
+provider = "applehv"
+
+[network]
+
+[secrets]
+
+[configmaps]
+EOF
+```
+
+## Errors Running 
+
 ### Problems with Admin Rights
 
-Issues with administrator rights are the main reason that we are trying to swich from Docker to Podman. Podman does not require you to be an administrator of your machine. So if you are unable to install Docker on your computer (e.g. because you are using a secure corporate laptop), you may wish to try using Podman instead. Podman is runs in 'user space', which means that it does not need admin rights to run. You can find out more about Podman [here](https://podman.io/). Our limited testing suggests that it works well with the {{< var env.name >}} environment. 
+Issues with administrator rights are the main reason that we are trying to swich from Docker to Podman. Podman does not require you to be an administrator of your machine. Podman is runs in 'user space', which means that it does not need admin rights to run. You can find out more about Podman [here](https://podman.io/). Our limited testing suggests that it works well with the {{< var env.name >}} environment. 
 
 You will need to:
 
 1. Download and install the Podman CLI and Desktop from [here](https://podman.io/).
 2. Run the following command in the PowerShell or Terminal:<br />
-`podman machine init`<br />`podman machine start`
+`podman machine init --cpus 4 --memory 4096 --rootful`<br />`podman machine start`
 1. And then run this command in PowerShell or Terminal to download the {{< var env.name >}} image with `podman pull {{< var docker.amd >}}` (or `{{< var docker.arm >}}` for M-chip Macs)
-
-## Errors Running 
 
 If you have managed to install Docker (or Podman) and have managed to 'pull' a disk image then the *last* remaining obstacle to running Podman or Docker is, typically, running out of disk space.
 
