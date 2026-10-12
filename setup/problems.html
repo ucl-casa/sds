@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jon Reades">
-<meta name="dcterms.date" content="2026-09-18">
+<meta name="dcterms.date" content="2026-10-12">
 
 <title>Dealing with Problems – CASA Computing Platform</title>
 <style>
@@ -306,11 +306,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#errors-installing" id="toc-errors-installing" class="nav-link active" data-scroll-target="#errors-installing">Errors Installing</a>
   <ul class="collapse">
   <li><a href="#unsupported-version" id="toc-unsupported-version" class="nav-link" data-scroll-target="#unsupported-version">Unsupported Version</a></li>
-  <li><a href="#problems-with-wsl2" id="toc-problems-with-wsl2" class="nav-link" data-scroll-target="#problems-with-wsl2">Problems with WSL2</a></li>
-  <li><a href="#problems-with-admin-rights" id="toc-problems-with-admin-rights" class="nav-link" data-scroll-target="#problems-with-admin-rights">Problems with Admin Rights</a></li>
+  </ul></li>
+  <li><a href="#problems-with-wsl2" id="toc-problems-with-wsl2" class="nav-link" data-scroll-target="#problems-with-wsl2">Problems with WSL2</a>
+  <ul class="collapse">
+  <li><a href="#windows-only" id="toc-windows-only" class="nav-link" data-scroll-target="#windows-only">Windows Only</a></li>
+  <li><a href="#enabling-hyper-v" id="toc-enabling-hyper-v" class="nav-link" data-scroll-target="#enabling-hyper-v">Enabling Hyper-V</a></li>
+  <li><a href="#windows-only-1" id="toc-windows-only-1" class="nav-link" data-scroll-target="#windows-only-1">Windows Only</a></li>
+  </ul></li>
+  <li><a href="#errors-initialising-the-machine" id="toc-errors-initialising-the-machine" class="nav-link" data-scroll-target="#errors-initialising-the-machine">Errors Initialising the Machine</a>
+  <ul class="collapse">
+  <li><a href="#mac-only" id="toc-mac-only" class="nav-link" data-scroll-target="#mac-only">Mac Only</a></li>
   </ul></li>
   <li><a href="#errors-running" id="toc-errors-running" class="nav-link" data-scroll-target="#errors-running">Errors Running</a>
   <ul class="collapse">
+  <li><a href="#problems-with-admin-rights" id="toc-problems-with-admin-rights" class="nav-link" data-scroll-target="#problems-with-admin-rights">Problems with Admin Rights</a></li>
   <li><a href="#dealing-with-disk-space" id="toc-dealing-with-disk-space" class="nav-link" data-scroll-target="#dealing-with-disk-space">Dealing with Disk Space</a></li>
   <li><a href="#other-disk-space-issues" id="toc-other-disk-space-issues" class="nav-link" data-scroll-target="#other-disk-space-issues">Other Disk Space Issues</a></li>
   </ul></li>
@@ -340,7 +349,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 18, 2026</p>
+      <p class="date">October 12, 2026</p>
     </div>
   </div>
   
@@ -365,29 +374,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The only problem that is common to both Windows and macOS machines is the ‘unsupported version’ (or similar wording) error. This happens when you are running an older version of the Operating System that is no longer supported by the most recent installer.</p>
 <p>If you are not able to update your computer’s operating system to a more recent release, then your only option is to use an older version of the application. You can find <a href="https://docs.docker.com/desktop/release-notes/">older versions of [Podman]() and Docker</a> to install, though for very old machines this may <em>still</em> not resolve the ‘unsupported version’ problem.</p>
 </section>
-<section id="problems-with-wsl2" class="level3">
-<h3 class="anchored" data-anchor-id="problems-with-wsl2">Problems with WSL2</h3>
+</section>
+<section id="problems-with-wsl2" class="level2">
+<h2 class="anchored" data-anchor-id="problems-with-wsl2">Problems with WSL2</h2>
+<section id="windows-only" class="level3 callout-alert">
+<h3 class="anchored" data-anchor-id="windows-only">Windows Only</h3>
+</section>
 <p>On Windows, if you have problems that mention WSL/WSL2 (this could be errors installing or updating this system) and you are sure that you’ve installed and updated WSL, then you <em>may</em> need to try using ‘Hyper-V’ instead. This is a ‘second-best’ workaround that has worked for some people.</p>
-<section id="enabling-hyper-v" class="level4">
-<h4 class="anchored" data-anchor-id="enabling-hyper-v">Enabling Hyper-V</h4>
+<section id="enabling-hyper-v" class="level3">
+<h3 class="anchored" data-anchor-id="enabling-hyper-v">Enabling Hyper-V</h3>
+</section>
+<section id="windows-only-1" class="level3 callout-alert">
+<h3 class="anchored" data-anchor-id="windows-only-1">Windows Only</h3>
+</section>
 <p>Microsoft <a href="https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v">has instructions here</a> on how to enable Hyper-V on your Windows machine. You will need to restart your computer after enabling Hyper-V. <a href="https://techcommunity.microsoft.com/t5/educator-developer-blog/step-by-step-enabling-hyper-v-for-use-on-windows-11/ba-p/3745905">These instructions</a> may also help.</p>
 <p>You will then need to look at the Podman or Docker settings and change the <code>Use the WSL2 based engine</code> to <code>Use the Hyper-V based engine</code>.</p>
 </section>
+<section id="errors-initialising-the-machine" class="level2">
+<h2 class="anchored" data-anchor-id="errors-initialising-the-machine">Errors Initialising the Machine</h2>
+<section id="mac-only" class="level3 callout-alert">
+<h3 class="anchored" data-anchor-id="mac-only">Mac Only</h3>
 </section>
+<p>Slightly confusing, there are two steps to running a Podman container: the first is creating a ‘machine’ on which to run containers; the second is pulling an ‘image’ to run <em>on</em> the machine.</p>
+<p>Here it’s Macs that have the issue: if your machine gets stuck on starting up then you most likely have the same issue that I do and it’s because the ‘newer’ virtualisation framework doesn’t run.</p>
+<p>I have a long-standing query in with Podman about why the ‘modern’ <code>libkrun</code> library doesn’t work on <em>some</em> Macs and they’ve never been able to resolve it. So I <em>still</em> have to force Podman to use an older Apply Hypervisor virtualisation library.</p>
+<p>The easiest way to resolve this is to create a configuration file <em>before</em> you initialise the machine. This should work on a Mac (copy+paste the entire block in one go):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&lt;&lt; EOF</span> <span class="op">&gt;</span> ~/.config/containers/containers.conf</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">[containers]</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">[engine]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st">env = []</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">[machine]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">#provider = "libkrun" # disabled</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">provider = "applehv"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">[network]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">[secrets]</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">[configmaps]</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="op">EOF</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="errors-running" class="level2">
+<h2 class="anchored" data-anchor-id="errors-running">Errors Running</h2>
 <section id="problems-with-admin-rights" class="level3">
 <h3 class="anchored" data-anchor-id="problems-with-admin-rights">Problems with Admin Rights</h3>
-<p>Issues with administrator rights are the main reason that we are trying to swich from Docker to Podman. Podman does not require you to be an administrator of your machine. So if you are unable to install Docker on your computer (e.g.&nbsp;because you are using a secure corporate laptop), you may wish to try using Podman instead. Podman is runs in ‘user space’, which means that it does not need admin rights to run. You can find out more about Podman <a href="https://podman.io/">here</a>. Our limited testing suggests that it works well with the sds2026 environment.</p>
+<p>Issues with administrator rights are the main reason that we are trying to swich from Docker to Podman. Podman does not require you to be an administrator of your machine. Podman is runs in ‘user space’, which means that it does not need admin rights to run. You can find out more about Podman <a href="https://podman.io/">here</a>. Our limited testing suggests that it works well with the sds2026 environment.</p>
 <p>You will need to:</p>
 <ol type="1">
 <li>Download and install the Podman CLI and Desktop from <a href="https://podman.io/">here</a>.</li>
 <li>Run the following command in the PowerShell or Terminal:<br> <code>podman machine init</code><br><code>podman machine start</code></li>
 <li>And then run this command in PowerShell or Terminal to download the sds2026 image with <code>podman pull docker.io/jreades/sds:2026-amd64</code> (or <code>docker.io/jreades/sds:2026-arm64</code> for M-chip Macs)</li>
 </ol>
-</section>
-</section>
-<section id="errors-running" class="level2">
-<h2 class="anchored" data-anchor-id="errors-running">Errors Running</h2>
 <p>If you have managed to install Docker (or Podman) and have managed to ‘pull’ a disk image then the <em>last</em> remaining obstacle to running Podman or Docker is, typically, running out of disk space.</p>
+</section>
 <section id="dealing-with-disk-space" class="level3">
 <h3 class="anchored" data-anchor-id="dealing-with-disk-space">Dealing with Disk Space</h3>
 <p>Some Windows PCs (especially those sold with Windows10) have two drives (<code>C</code> and <code>D</code>). The <code>C</code> drive may fill up very quickly once you start installing and running software or processing data. In that case you may want to store your images on the <code>D</code> drive.</p>
@@ -396,20 +437,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="other-disk-space-issues" class="level3">
 <h3 class="anchored" data-anchor-id="other-disk-space-issues">Other Disk Space Issues</h3>
 <p>If you don’t have separate <code>C</code> and <code>D</code> drives but still have very little space left on your hard drive then it’s worth remembering that all of the images you’ve used and containers that you have run are saved on your computer. You can see how much space Docker (there’s a similar command for Podman) is using by running the following command in the PowerShell or Terminal:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> system df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> system df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="deleting-an-image" class="level4">
 <h4 class="anchored" data-anchor-id="deleting-an-image">Deleting an Image</h4>
 <p>The most ‘intuitive’ way is to delete each image by it’s unique ID:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-aq</span> <span class="co"># Get list of running processes and work out container IDs to remove</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm <span class="at">-f</span> <span class="op">&lt;</span>list of container IDs<span class="op">&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images <span class="co"># Get list of available images and work out image IDs to remove</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="at">-f</span> <span class="op">&lt;</span>list of image IDs<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-aq</span> <span class="co"># Get list of running processes and work out container IDs to remove</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rm <span class="at">-f</span> <span class="op">&lt;</span>list of container IDs<span class="op">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images <span class="co"># Get list of available images and work out image IDs to remove</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> rmi <span class="at">-f</span> <span class="op">&lt;</span>list of image IDs<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="deleting-by-filter" class="level4">
 <h4 class="anchored" data-anchor-id="deleting-by-filter">Deleting by Filter</h4>
 <p>A more ‘direct’ approach that should be used with some care is to looking for the name of the image and delete that way:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-aqf</span> <span class="st">"name=sds"</span> <span class="at">--format</span><span class="op">=</span><span class="st">"{{.Image}} {{.Names}} {{.ID}}"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"2026"</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">' '</span> <span class="at">-f3</span> <span class="kw">|</span> <span class="fu">xargs</span> docker rm <span class="at">-f</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images <span class="at">--format</span><span class="op">=</span><span class="st">"{{.Repository}} {{.Tag}} {{.ID}}"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"sds"</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">' '</span> <span class="at">-f3</span> <span class="kw">|</span> <span class="fu">xargs</span> docker rmi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" tabindex="0" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> ps <span class="at">-aqf</span> <span class="st">"name=sds"</span> <span class="at">--format</span><span class="op">=</span><span class="st">"{{.Image}} {{.Names}} {{.ID}}"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"2026"</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">' '</span> <span class="at">-f3</span> <span class="kw">|</span> <span class="fu">xargs</span> docker rm <span class="at">-f</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images <span class="at">--format</span><span class="op">=</span><span class="st">"{{.Repository}} {{.Tag}} {{.ID}}"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"sds"</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span><span class="st">' '</span> <span class="at">-f3</span> <span class="kw">|</span> <span class="fu">xargs</span> docker rmi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 </section>
