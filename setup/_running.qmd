@@ -5,37 +5,21 @@ You can use a single command to download and start the `{{< var env.name >}}` **
 
 :::: {.panel-tabset}
 
-## Mac (Intel/AMD64)
+## Macs (Apple Silicon)
 
-```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
-   -v "$(pwd):/home/jovyan/work" \
-  {{< var docker.amd >}} start.sh jupyter lab \
-  --NotebookApp.notebook_dir='/home/jovyan/work' \
-  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-```
-
-## Macs (Apple Silicon/ARM64)
-
-```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 \
-   -v "$(pwd):/home/jovyan/work" \
-  {{< var docker.arm >}} start.sh jupyter lab \
-  --NotebookApp.notebook_dir='/home/jovyan/work' \
-  --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-```
+{{< include _mac-startup.qmd >}}
 
 ## Windows (Intel/AMD64)
 
-```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -p 4444:4444 -v "$(pwd):/home/jovyan/work" {{< var docker.amd >}} start.sh jupyter lab --NotebookApp.notebook_dir='/home/jovyan/work' --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-```
+{{< include _win-startup.qmd >}}
 
 ## Windows (ARM64)
 
-```bash
-podman run --rm -d --name {{< var env.name >}} -p 8888:8888 -v "$(pwd):/home/jovyan/work" {{< var docker.arm >}} start.sh jupyter lab --LabApp.password='' --ServerApp.password='' --NotebookApp.token=''
-```
+Speak to a member of CASA staff.
+
+## Older Macs (Pre-2020)
+
+Speak to a member of CASA staff.
 
 ::::
 
